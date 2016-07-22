@@ -1,0 +1,54 @@
+<div class="col-sm-2 col-md-2 sidebar bg-primary" *ngIf="visible">
+  <ul class="nav nav-sidebar">
+    <li class="navbar-brand">
+      <a href="#"><img src="https://az381524.vo.msecnd.net/images/Busidex_logo_hor.png" /></a>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.AddMembers)" [ngClass]="{active: Tabs[TabItems.AddMembers]}">
+      <a [routerLink]="['/members/edit']">Add Members +</a>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.AddReferrals)" [ngClass]="{active: Tabs[TabItems.AddReferrals]}">
+      <a>Add {{ReferralLabel}} +</a>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.AddGroup)" [ngClass]="{active: Tabs[TabItems.AddGroup]}">
+      <a >Add Group +</a>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.EditDetails)" [ngClass]="{active: Tabs[TabItems.EditDetails]}">
+      <a >Edit Details</a>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.HomePage)" [ngClass]="{active: Tabs[TabItems.HomePage]}">
+      <a >Edit Message</a>
+    </li>
+    <li>
+      <hr/>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.Details)" [ngClass]="{active: Tabs[TabItems.Details]}">
+      <a [routerLink]="['/details']">Details</a>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.Members)" [ngClass]="{active: Tabs[TabItems.Members]}">
+      <a [routerLink]="['/members']">Members</a>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.Guests)" [ngClass]="{active: Tabs[TabItems.Guests]}">
+      <a [routerLink]="['/guests']">Guests</a>
+    </li>
+    <li (click)="SetCurrentTab(TabItems.Referrals)" [ngClass]="{active: Tabs[TabItems.Referrals]}" >      
+      <a [routerLink]="['/referrals']">{{ReferralLabel}}</a>
+    </li>
+    <!--<li (click)="SetCurrentTab(TabItems.Share)" [ngClass]="{active: Tabs[TabItems.Share]}" ng-show="IsOrganizationMember()">
+      <a>Send Referrals</a>
+    </li>-->
+    <li>
+      <hr *ngIf="Organization.Groups.length > 0" />
+    </li>
+    <li *ngFor="let group of Organization.Groups">
+      <a class="groupLink" (click)="GetGroup(group.GroupId)">{{group.Description}}</a>
+    </li>
+    <li class="footer" (click)="SetCurrentTab(TabItems.Login)" [ngClass]="{active: Tabs[TabItems.Login]}">
+      <hr/>
+      <a *ngIf="!loggedIn" [routerLink]="['/login']" >Log In</a>
+      <a *ngIf="loggedIn" [routerLink]="['/logout']" >Log Out</a>
+    </li> 
+  </ul>
+</div>
+<div class="container-fluid " [ngClass]="{ 'workarea': visible, 'full-screen': !visible }">
+  <router-outlet></router-outlet>
+</div>

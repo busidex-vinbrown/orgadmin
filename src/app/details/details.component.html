@@ -1,0 +1,37 @@
+<div class="loader" *ngIf="loading">
+    <img src="img/spinner.gif" />
+</div>
+<div class="card" *ngIf="!loading">
+    <div class="card-block">
+        <h3 class="card-title">{{organization.Name}}</h3>
+    </div>
+    <img class="card-img-top orgLogo" [src]="organization.logo" *ngIf="organization.LogoFileName != null" />
+
+    <div class="card-block">
+        <img class="web" src="img/browser.jpg" />
+        <a class="btn btn-link" [href]="organization.Url" target="_blank">{{organization.Url}}</a>
+    </div>
+    <div class="card-block" *ngIf="organization.Contacts != null && organization.Contacts.length > 0">
+        {{organization.Contacts}}
+    </div>
+    <div class="card-block" *ngIf="organization.Email != null && organization.Email.length > 0">
+        <img class="email" src="img/email.jpg" />
+        <a class="btn btn-link" [href]="emailLink">{{organization.Email}}</a>
+    </div>
+    <div class="card-block" *ngIf="organization.Phone1 != null && organization.Phone1.length > 0">
+        Phone:&nbsp;{{Organization.Phone1}}
+    </div>
+    <div class="card-block" *ngIf="organization.Phone2 != null && organization.Phone2.length > 0">
+        Phone:&nbsp;{{Organization.Phone2}}
+    </div>
+    <div class="card-block" *ngIf="organization.Twitter != null && organization.Twitter.length > 0">
+        <img class="twitter" src="img/twitter.png" />
+        <a class="btn btn-link" target="_blank" [href]="organization.Twitter">{{organization.Twitter}}</a>
+    </div>
+    <div class="card-block" *ngIf="organization.Facebook != null && organization.Facebook.length > 0">
+        <img class="fb" src="img/fb.png" />
+        <a class="btn btn-link" target="_blank" [href]="organization.Facebook">{{organization.Facebook}}</a>
+    </div>
+    <div [innerHTML]="organization.HomePage">
+    </div>
+</div>

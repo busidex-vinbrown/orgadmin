@@ -1,0 +1,19 @@
+<div class="loader" *ngIf="loading">
+    <img src="img/spinner.gif" />
+</div>
+<div class="well" *ngIf="!loading">
+    <ul style="list-style: none;margin-top:20px;">
+        <li>
+            <h4>Guest List</h4>
+            <hr/>
+        </li>
+        <li>
+            <h5 *ngIf="guests.length == 0">No Guests To Show</h5>
+        </li>
+        <li *ngFor="#guest of guests">
+            <a href="" ng-click="UpdateGuestStatus(guest, 1)" *ngIf="guest.AddStatus==2" class="btn btn-success">Accept</a>
+            <a href="" ng-click="UpdateGuestStatus(guest, 3)" *ngIf="guest.AddStatus==2" class="btn btn-warning">Decline</a>
+            <a class="btn btn-link" href="mailto:{{guest.Email}}">{{guest.Email}}</a>
+        </li>
+    </ul>
+</div>
