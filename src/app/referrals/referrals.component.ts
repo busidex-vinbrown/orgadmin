@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { CacheService, CacheKeys } from '../shared';
 import { Response } from '@angular/http';
@@ -13,6 +13,7 @@ import { User, Organization, OrganizationServiceEvents } from '../shared/models'
     templateUrl: './referrals.component.html'
 })
 export class ReferralsComponent implements OnInit {
+@Input() editMode: boolean;
 
     guests: any[];
     loading: boolean;
@@ -23,6 +24,14 @@ export class ReferralsComponent implements OnInit {
         private organizationService: OrganizationServiceComponent,
         private cacheService: CacheService,
         private cacheKeys: CacheKeys) {
+
+    }
+
+    removeReferral(cardId: number){
+
+    }
+
+    goToDetails(cardId: number){
 
     }
 
@@ -66,9 +75,13 @@ export class ReferralsComponent implements OnInit {
                         this.referrals = [];
 
                         for (let i = 0; i < data2.Model.length; i++) {
-                            let card = data2.Model[i];
-                            let link = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
-                            card.imgSrc = link;
+                            let card = data2.Model[i].Card;
+                            card.imgSrc = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
+                            card.emailLink = 'mailto:' + card.Email;
+                            card.Notes = decodeURIComponent(data2.Model[i].Notes);
+                            if(card.Notes === 'null'){
+                                card.Notes = '';
+                            }
                             this.referrals.push(card);
                         }
 

@@ -1,14 +1,29 @@
-<div class="loader" *ngIf="loading">
-    <img src="img/spinner.gif" />
-</div>
-<div class="well" *ngIf="!loading">
-    <h5 *ngIf="referrals.length == 0">No {{noReferralsMessage}} To Show</h5>
-    <div>
-        <div style="display:inline-block;" *ngFor="#card of referrals">
-            <i class="icon-remove" (click)="RemoveMember(card)"></i>
-            <img [alt]="card.Name" [src]="card.imgSrc" 
-                [ngClass]="{ 'myCard' : card.IsMyCard, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
-                 style="position:relative" (click)="GoToDetails(card)" />
+<div>
+    <div class="loader" *ngIf="loading">
+        <img src="img/spinner.gif" />
+    </div>
+    <div  *ngIf="!loading" class="referral-container">
+        <h5 *ngIf="referrals.length == 0">No {{noReferralsMessage}} To Show</h5>
+        
+        <div *ngFor="#card of referrals" class="referral-row">
+            
+            <div class="col-md-4">
+                <img 
+                    [alt]="card.Name" 
+                    [src]="card.imgSrc" 
+                    [ngClass]="{ 'myCard' : card.IsMyCard, 'clickable': !editMode, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
+                    (click)="goToDetails(card.CardId)" />
+                <i *ngIf="editMode" class="fa fa-times-circle icon-remove clickable" (click)="removeReferral(card.CardId)"></i>
+            </div>
+            <div class="col-md-4">
+                <label *ngFor="#phone of card.PhoneNumbers">{{phone.Number}}</label>
+                <a [href]="card.emailLink" target="_blank">{{card.Email}}</a><br />
+                <a [href]="card.Url" target="_blank">{{card.Url}}</a>
+            </div>
+            <div class="col-md-4">
+                <span>{{card.Notes}}</span>
+            </div>
+            
         </div>
     </div>
 </div>

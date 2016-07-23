@@ -3,6 +3,7 @@
 .sidebar{
     height: 100vh; 
     padding: 0;
+    position: fixed;
     
     .nav-sidebar{
         hr{
@@ -61,4 +62,30 @@
         height: 80px;
         width: 80px;
     }
+}
+
+.v_preview, .h_preview {
+    margin: 8px;
+    border: solid 1pt #ddd;
+}
+.h_preview {
+    height: 120px;
+    width: 220px;
+}
+.v_preview {
+  height: 210px;
+  width: 140px;
+}
+.clickable{
+    cursor: pointer;
+}
+.icon-remove{
+    background-color: #ffffff;
+    border-radius: 15px;
+    color: #ff0000;
+    font-size: 25px;
+    margin-left: -30px;
+    position: relative;
+    vertical-align: top;
+    z-index: 2;
 }
