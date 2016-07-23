@@ -43,7 +43,7 @@ export class ReferralsComponent implements OnInit {
             this.noReferralsMessage = organization.ReferralLabel;
 
             this.loading = false;
-        } else {
+        } else { 
             this.organizationService.getOrganization(orgId)
                 .map((res: Response) => res.json())
                 .subscribe(
