@@ -1,3 +1,5 @@
 export enum OrganizationServiceEvents {
-    MembersUpdated
+    MembersUpdated,
+    OrganizationReceived,
+    OrganizationUpdated
 };

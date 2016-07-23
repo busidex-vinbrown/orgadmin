@@ -4,7 +4,7 @@ import { TabItem } from './tab.enum';
 import { OrganizationServiceComponent } from './shared/organization.service';
 import { Response } from '@angular/http';
 import { ApiService, CacheService, CacheKeys } from './shared';
-import { User } from './shared/models';
+import { User, OrganizationServiceEvents } from './shared/models';
 
 import '../styles/app.scss';
 
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
   TabItems: any;
   Organization: any;
   EditingDetails: boolean;
-  ReferralLabel: string;
+  ReferralLabel: string = 'Referrals';
   visible: boolean = true;
   loggedIn: boolean = false;
 
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    
     let data = this.cacheService.get(this.cacheKeys.User) || null;
     let user: User = JSON.parse(data);
     this.loggedIn = user !== null;
@@ -84,20 +84,22 @@ export class AppComponent implements OnInit {
         let organization = JSON.parse(orgData);
         this.ReferralLabel = organization.ReferralLabel;
       } else {
-        this.organizationService.getOrganization(user.Organizations[0].Item2)
-          .map((res: Response) => res.json())
-          .subscribe(
-          _data => {
-            this.organizationService.cacheOrganizationData(_data);
-            this.ReferralLabel = data.Model.ReferralLabel;
-          },
-          err => console.error(err),
-          () => console.log('app data loaded')
-          );
+        this.organizationService.getOrganization(user.Organizations[0].Item2);
       }
     } else {
       this.router.navigate(['/login']);
     }
+
+    // Subscribe to organization service events
+    this.organizationService.subscribe((event: OrganizationServiceEvents) => {
+      console.log('App component listening to event: ' + event);
+
+      if (event === OrganizationServiceEvents.OrganizationReceived) {
+        let orgData = this.cacheService.get(this.cacheKeys.Organization);
+        let organization = JSON.parse(orgData);
+        this.ReferralLabel = organization.ReferralLabel;
+      }
+    });
 
     this.EditingDetails = false;
     this.Organization = {};

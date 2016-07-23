@@ -1,5 +1,5 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import { Http, Headers, Response, ResponseOptions } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Headers, Response } from '@angular/http';
 import { CacheService, CacheKeys, BaseService } from '../shared';
 import { OrganizationServiceEvents } from '../shared/models';
 
@@ -17,7 +17,14 @@ export class OrganizationServiceComponent extends BaseService {
         let headers = new Headers();
         headers.append('X-Authorization-Token', this.getUserToken());
 
-        return this.http.get(ROOT + '/Organization/Get/' + id, { headers: headers });
+        this.http.get(ROOT + '/Organization/Get/' + id, { headers: headers })
+            .map((res: Response) => res.json())
+            .subscribe((data) => {
+
+                this.cacheService.put(this.cacheKeys.Organization, JSON.stringify(data.Model));
+                this.emit(OrganizationServiceEvents.OrganizationReceived);
+                
+            });
     }
 
     getMembers(organizationId: number) {
@@ -44,11 +51,11 @@ export class OrganizationServiceComponent extends BaseService {
         return this.http.get(ROOT + '/Organization/GetReferrals/?organizationId=' + organizationId, { headers: headers });
     }
 
-    addMembers(organizationId: number, cardId: number) {
+    addMember(organizationId: number, cardId: number) {
         let headers = new Headers();
         let token = this.getUserToken();
         headers.append('X-Authorization-Token', token);
-        //console.log('adding members. userToken: ' + token)
+
         headers.append('Content-Type', 'application/json');
 
         let url = ROOT + '/Organization/AddOrganizationCard?organizationId=' + organizationId + '&cardId=' + cardId;
@@ -56,13 +63,29 @@ export class OrganizationServiceComponent extends BaseService {
             .subscribe((response: Response) => {
 
                 this.cacheService.put(this.cacheKeys.Members, null);
-                console.log('Broadcasting event: ' + OrganizationServiceEvents.MembersUpdated);
+
                 this.emit(OrganizationServiceEvents.MembersUpdated);
                 return response;
             });
     }
 
+    removeMember(organizationId: number, cardId: number) {
+        let headers = new Headers();
+        let token = this.getUserToken();
+        headers.append('X-Authorization-Token', token);
 
+        headers.append('Content-Type', 'application/json');
+
+        let url = ROOT + '/Organization/DeleteOrganizationCard?organizationId=' + organizationId + '&cardId=' + cardId;
+        this.http.delete(url, { headers: headers })
+            .subscribe((response: Response) => {
+
+                this.cacheService.put(this.cacheKeys.Members, null);
+
+                this.emit(OrganizationServiceEvents.MembersUpdated);
+                return response;
+            });
+    }
 
     cacheOrganizationData(data) {
         data.Model.logo = data.Model.LogoFilePath + data.Model.LogoFileName + '.' + data.Model.LogoType;

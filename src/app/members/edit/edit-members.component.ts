@@ -68,7 +68,7 @@ export class EditMembersComponent implements OnInit {
         this.existingCards.push(card);
         this.searchResults.splice(i);
 
-        this.organizationService.addMembers(orgId, card.CardId);
+        this.organizationService.addMember(orgId, card.CardId);
       }
 
     }

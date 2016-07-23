@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Response } from '@angular/http';
@@ -14,11 +14,13 @@ import { User, OrganizationServiceEvents } from '../shared/models';
   templateUrl: './members.component.html'
 })
 export class MembersComponent implements OnInit {
+  @Input() editMode: boolean;
 
   searchFilter: any;
   showSelectedOnly: boolean;
   organization: any;
   loading: boolean;
+  organizationId: number;
 
   constructor(
     private organizationService: OrganizationServiceComponent,
@@ -54,40 +56,45 @@ export class MembersComponent implements OnInit {
     }
   }
 
+  goToDetails(card) {
+    if (!this.editMode) {
+
+    }
+  }
+
+  removeMember(cardId: number) {
+    if (window.confirm('Are you sure you want to remove this member?')) {
+      this.organizationService.removeMember(this.organizationId, cardId);
+    }
+  }
+
   ngOnInit() {
 
     let userData = this.cacheService.get(this.cacheKeys.User);
     let user: User = JSON.parse(userData);
-    let orgId = user.Organizations[0].Item2;
+    this.organizationId = user.Organizations[0].Item2;
 
+    let orgId = this.organizationId;
     this.loading = true;
     let orgData = this.cacheService.get(this.cacheKeys.Organization);
     if (orgData) {
       this.organization = JSON.parse(orgData);
-      this.getMembers(orgId);
+      this.getMembers(this.organizationId);
     } else {
-      this.organizationService.getOrganization(orgId)
-        .map((res: Response) => res.json())
-        .subscribe(
-        data => {
-
-          this.organizationService.cacheOrganizationData(data);
-          orgData = this.cacheService.get(this.cacheKeys.Organization);
-          this.organization = JSON.parse(orgData);
-          this.getMembers(orgId);
-        },
-        err => console.error(err),
-        () => { }
-        );
+      this.organizationService.getOrganization(orgId);
     }
 
     // Subscribe to organization service events
     this.organizationService.subscribe((event: OrganizationServiceEvents) => {
-      console.log('Listening to event: ' + event);
-      if (event === OrganizationServiceEvents.MembersUpdated) {
-        console.log('Event found! updating members...');
+      console.log('Members component listening to event: ' + event);
+      if (event === OrganizationServiceEvents.MembersUpdated) {        
         this.organization.Cards = [];
         this.getMembers(orgId);
+      }
+      if(event === OrganizationServiceEvents.OrganizationReceived){
+          orgData = this.cacheService.get(this.cacheKeys.Organization);
+          this.organization = JSON.parse(orgData);
+          this.getMembers(orgId);
       }
     });
   }

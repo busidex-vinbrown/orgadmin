@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { Response } from '@angular/http';
 import { CacheService, CacheKeys } from '../shared';
-import { User } from '../shared/models';
+import { User, OrganizationServiceEvents } from '../shared/models';
 
 @Component({
   selector: 'my-details',
@@ -29,7 +29,7 @@ export class DetailsComponent implements OnInit {
 
     let userData = this.cacheService.get(this.cacheKeys.User);
     let user: User = JSON.parse(userData);
-
+    
     if (user.StartPage === 'Organization') {
       let orgId = user.Organizations[0].Item2;
       let orgData = this.cacheService.get(this.cacheKeys.Organization);
@@ -39,19 +39,22 @@ export class DetailsComponent implements OnInit {
         this.organization.logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
       } else {
         this.loading = true;
-        this.organizationService.getOrganization(orgId)
-          .map((res: Response) => res.json())
-          .subscribe(
-          data => {
-            this.organization = data.Model;
-            this.emailLink = 'mailto:' + data.Model.Email;
-            this.organization.logo = data.Model.LogoFilePath + data.Model.LogoFileName + '.' + data.Model.LogoType;
-            this.loading = false;
-          },
-          err => console.error(err),
-          () => console.log('done')
-          );
+        this.organizationService.getOrganization(orgId);
       }
+
+      // Subscribe to organization service events
+      this.organizationService.subscribe((event: OrganizationServiceEvents) => {
+        console.log('Details component listening to event: ' + event);
+
+        if(event === OrganizationServiceEvents.OrganizationReceived){
+            orgData = this.cacheService.get(this.cacheKeys.Organization);
+            this.organization = JSON.parse(orgData);
+            this.emailLink = 'mailto:' + this.organization.Email;
+            this.organization.logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
+            this.loading = false;
+        }
+      });
+      
     } else {
       if (window.location.href.indexOf('localhost') >= 0) {
         window.location.href = '/login';

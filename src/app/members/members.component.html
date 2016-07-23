@@ -4,10 +4,12 @@
 <div class="well" *ngIf="!loading">
     <div>
         <div class="card-container" style="display:inline-block;" *ngFor="#card of organization.Cards">
-            <i class="icon-remove" (click)="RemoveMember(card)"></i>
-            <img [alt]="card.Name" [src]="card.imgSrc" 
-                [ngClass]="{ 'myCard' : card.IsMyCard, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
-                 style="position:relative" (click)="GoToDetails(card)" />
+            <img 
+                [alt]="card.Name" 
+                [src]="card.imgSrc" 
+                [ngClass]="{ 'myCard' : card.IsMyCard, 'clickable': !editMode, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
+                (click)="GoToDetails(card)" />
+            <i *ngIf="editMode" class="fa fa-times-circle icon-remove clickable" (click)="removeMember(card.CardId)"></i>
         </div>
     </div>
 </div>

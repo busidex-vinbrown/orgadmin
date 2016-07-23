@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
-import { CacheService, CacheKeys, SearchServiceComponent } from '../shared';
+import { CacheService, CacheKeys } from '../shared';
 import { Response } from '@angular/http';
-import { User, Organization } from '../shared/models';
+import { User, Organization, OrganizationServiceEvents } from '../shared/models';
 
 @Component({
     selector: 'referrals',
@@ -43,42 +43,42 @@ export class ReferralsComponent implements OnInit {
             this.noReferralsMessage = organization.ReferralLabel;
 
             this.loading = false;
-        } else { 
-            this.organizationService.getOrganization(orgId)
-                .map((res: Response) => res.json())
-                .subscribe(
-                data => {
-                    console.log(data);
-
-                    this.cacheService.put(this.cacheKeys.Organization, JSON.stringify(data.Model));
-                    this.noReferralsMessage = data.Model.ReferralLabel;
-
-                    this.organizationService.getReferrals(orgId)
-                        .map((res: Response) => res.json())
-                        .subscribe(
-                        data2 => {
-
-                            this.referrals = [];
-
-                            for (let i = 0; i < data2.Model.length; i++) {
-                                let card = data2.Model[i];
-                                let link = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
-                                card.imgSrc = link;
-                                this.referrals.push(card);
-                            }
-                            
-                            this.cacheService.put(this.cacheKeys.Referrals, JSON.stringify(this.referrals));
-                            this.loading = false;
-                        },
-                        err => console.error(err),
-                        () => console.log('done')
-                        );
-
-                },
-                err => console.error(err),
-                () => console.log('app data loaded')
-                );
-
+        } else {
+            this.organizationService.getOrganization(orgId);
         }
+
+        // Subscribe to organization service events
+        this.organizationService.subscribe((event: OrganizationServiceEvents) => {
+            console.log('Referral component listening to event: ' + event);
+
+            if (event === OrganizationServiceEvents.OrganizationReceived) {
+                
+                let organizationData = this.cacheService.get(this.cacheKeys.Organization);
+                let organization: Organization = JSON.parse(organizationData);
+
+                this.noReferralsMessage = organization.ReferralLabel;
+
+                this.organizationService.getReferrals(orgId)
+                    .map((res: Response) => res.json())
+                    .subscribe(
+                    data2 => {
+
+                        this.referrals = [];
+
+                        for (let i = 0; i < data2.Model.length; i++) {
+                            let card = data2.Model[i];
+                            let link = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
+                            card.imgSrc = link;
+                            this.referrals.push(card);
+                        }
+
+                        this.cacheService.put(this.cacheKeys.Referrals, JSON.stringify(this.referrals));
+                        this.loading = false;
+                    },
+                    err => console.error(err),
+                    () => console.log('done')
+                    );
+            }
+        });
     }
 }

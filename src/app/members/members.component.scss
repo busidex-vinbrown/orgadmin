@@ -10,3 +10,16 @@
   height: 210px;
   width: 140px;
 }
+.clickable{
+    cursor: pointer;
+}
+.icon-remove{
+    background-color: #ffffff;
+    border-radius: 15px;
+    color: #ff0000;
+    font-size: 25px;
+    margin-left: -30px;
+    position: relative;
+    vertical-align: top;
+    z-index: 2;
+}
