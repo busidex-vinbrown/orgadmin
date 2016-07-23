@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { CacheService, CacheKeys, BaseService } from '../shared';
-import { User } from '../shared/models';
 
 const ROOT = 'https://www.busidexapi.com/api';
 
@@ -9,7 +8,7 @@ const ROOT = 'https://www.busidexapi.com/api';
 export class OrganizationServiceComponent extends BaseService {
 
     constructor(protected http: Http, protected cacheService: CacheService, protected cacheKeys: CacheKeys) {
-        super(http, cacheService, cacheKeys)
+        super(http, cacheService, cacheKeys);
     }
 
     getOrganization(id: number) {
@@ -43,6 +42,16 @@ export class OrganizationServiceComponent extends BaseService {
 
         return this.http.get(ROOT + '/Organization/GetReferrals/?organizationId=' + organizationId, { headers: headers });
     }
+
+    addMembers(organizationId: number, cardId: number) {
+        let headers = new Headers();
+        headers.append('X-Authorization-Token', this.getUserToken());
+        headers.append('Content-Type', 'application/json');
+
+        let url = ROOT + '/Organization/AddOrganizationCard?organizationId=' + organizationId + '&cardId=' + cardId;
+        return this.http.post(url, { headers: headers });
+    }
+
 
     cacheOrganizationData(data) {
         data.Model.logo = data.Model.LogoFilePath + data.Model.LogoFileName + '.' + data.Model.LogoType;

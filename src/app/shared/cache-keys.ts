@@ -6,4 +6,5 @@ export class CacheKeys {
     User: string = 'user';
     Organization = 'organization';
     Members = 'members';
+    Referrals = 'referrals';
 }

@@ -4,9 +4,9 @@ import { User } from '../shared/models';
 import { CacheService, CacheKeys } from '../shared';
 
 @Injectable()
-export class BaseService{
+export class BaseService {
 
-    constructor(protected http: Http, protected cacheService: CacheService, protected cacheKeys: CacheKeys){
+    constructor(protected http: Http, protected cacheService: CacheService, protected cacheKeys: CacheKeys) {
 
     }
 

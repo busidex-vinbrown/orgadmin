@@ -9,6 +9,7 @@
         </div>
     </div>
     <hr />
+    <button class="btn btn-primary" *ngIf="searchResults.length > 0">Add Selected</button>
     <div class="search-results">
         <div style="display:inline-block;" *ngFor="#card of searchResults"
             (click)="toggle(card)"

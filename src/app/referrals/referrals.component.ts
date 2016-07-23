@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {OrganizationServiceComponent} from '../shared/organization.service';
-import {Response} from '@angular/http';
+import { OrganizationServiceComponent } from '../shared/organization.service';
+import { CacheService, CacheKeys, SearchServiceComponent } from '../shared';
+import { Response } from '@angular/http';
+import { User, Organization } from '../shared/models';
 
 @Component({
     selector: 'referrals',
@@ -17,46 +19,66 @@ export class ReferralsComponent implements OnInit {
     referrals: any[];
     noReferralsMessage: string;
 
-    constructor(private organizationService: OrganizationServiceComponent) {
+    constructor(
+        private organizationService: OrganizationServiceComponent,
+        private cacheService: CacheService,
+        private cacheKeys: CacheKeys) {
 
     }
 
     ngOnInit() {
 
-        let orgId = 12;
+        let userData = this.cacheService.get(this.cacheKeys.User);
+        let user: User = JSON.parse(userData);
+        let orgId = user.Organizations[0].Item2;
+
         this.loading = true;
 
-        this.organizationService.getOrganization(12)
-            .map((res: Response) => res.json())
-            .subscribe(
-            data => {
-                console.log(data);
-                this.noReferralsMessage = data.Model.ReferralLabel;
+        let referralData = this.cacheService.get(this.cacheKeys.Referrals);
+        if (referralData) {
+            this.referrals = JSON.parse(referralData);
 
-                this.organizationService.getReferrals(orgId)
-                    .map((res: Response) => res.json())
-                    .subscribe(
-                    data2 => {
+            let organizationData = this.cacheService.get(this.cacheKeys.Organization);
+            let organization: Organization = JSON.parse(organizationData);
+            this.noReferralsMessage = organization.ReferralLabel;
 
-                        this.referrals = [];
+            this.loading = false;
+        } else {
+            this.organizationService.getOrganization(orgId)
+                .map((res: Response) => res.json())
+                .subscribe(
+                data => {
+                    console.log(data);
 
-                        for (let i = 0; i < data2.Model.length; i++) {
-                            let card = data2.Model[i];
-                            let link = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
-                            card.imgSrc = link;
-                            this.referrals.push(card);
-                        }
-                        this.loading = false;
-                    },
-                    err => console.error(err),
-                    () => console.log('done')
-                    );
+                    this.cacheService.put(this.cacheKeys.Organization, JSON.stringify(data.Model));
+                    this.noReferralsMessage = data.Model.ReferralLabel;
 
-            },
-            err => console.error(err),
-            () => console.log('app data loaded')
-            );
+                    this.organizationService.getReferrals(orgId)
+                        .map((res: Response) => res.json())
+                        .subscribe(
+                        data2 => {
 
+                            this.referrals = [];
 
+                            for (let i = 0; i < data2.Model.length; i++) {
+                                let card = data2.Model[i];
+                                let link = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
+                                card.imgSrc = link;
+                                this.referrals.push(card);
+                            }
+                            
+                            this.cacheService.put(this.cacheKeys.Referrals, JSON.stringify(this.referrals));
+                            this.loading = false;
+                        },
+                        err => console.error(err),
+                        () => console.log('done')
+                        );
+
+                },
+                err => console.error(err),
+                () => console.log('app data loaded')
+                );
+
+        }
     }
 }
