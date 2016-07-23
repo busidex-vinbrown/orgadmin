@@ -3,7 +3,7 @@ import { OrganizationServiceComponent } from '../shared/organization.service';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Response } from '@angular/http';
 import { CacheService, CacheKeys } from '../shared';
-import { User } from '../shared/models';
+import { User, OrganizationServiceEvents } from '../shared/models';
 
 @Component({
   selector: 'members',
@@ -80,5 +80,15 @@ export class MembersComponent implements OnInit {
         () => { }
         );
     }
+
+    // Subscribe to organization service events
+    this.organizationService.subscribe((event: OrganizationServiceEvents) => {
+      console.log('Listening to event: ' + event);
+      if (event === OrganizationServiceEvents.MembersUpdated) {
+        console.log('Event found! updating members...');
+        this.organization.Cards = [];
+        this.getMembers(orgId);
+      }
+    });
   }
 }

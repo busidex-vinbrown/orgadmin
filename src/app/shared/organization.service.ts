@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Injectable, EventEmitter } from '@angular/core';
+import { Http, Headers, Response, ResponseOptions } from '@angular/http';
 import { CacheService, CacheKeys, BaseService } from '../shared';
+import { OrganizationServiceEvents } from '../shared/models';
 
 const ROOT = 'https://www.busidexapi.com/api';
 
@@ -45,12 +46,22 @@ export class OrganizationServiceComponent extends BaseService {
 
     addMembers(organizationId: number, cardId: number) {
         let headers = new Headers();
-        headers.append('X-Authorization-Token', this.getUserToken());
+        let token = this.getUserToken();
+        headers.append('X-Authorization-Token', token);
+        //console.log('adding members. userToken: ' + token)
         headers.append('Content-Type', 'application/json');
 
         let url = ROOT + '/Organization/AddOrganizationCard?organizationId=' + organizationId + '&cardId=' + cardId;
-        return this.http.post(url, { headers: headers });
+        this.http.post(url, {}, { headers: headers })
+            .subscribe((response: Response) => {
+
+                this.cacheService.put(this.cacheKeys.Members, null);
+                console.log('Broadcasting event: ' + OrganizationServiceEvents.MembersUpdated);
+                this.emit(OrganizationServiceEvents.MembersUpdated);
+                return response;
+            });
     }
+
 
 
     cacheOrganizationData(data) {

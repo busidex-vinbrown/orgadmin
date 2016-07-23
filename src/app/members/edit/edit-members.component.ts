@@ -58,6 +58,9 @@ export class EditMembersComponent implements OnInit {
    * api and updates the local cache.
    */
   addSelected() {
+
+    let orgId = this.user.Organizations[0].Item2;
+
     for (let i = 0; i < this.searchResults.length; i++) {
 
       let card = this.searchResults[i];
@@ -65,19 +68,15 @@ export class EditMembersComponent implements OnInit {
         this.existingCards.push(card);
         this.searchResults.splice(i);
 
-        this.organizationService.addMembers(this.organization.OrganizationId, card.CardId)
-          .map((res: Response) => res.json())
-          .subscribe((results) => {
-
-          });
+        this.organizationService.addMembers(orgId, card.CardId);
       }
 
     }
 
-    // update the local cache
+    // update the local cache for Members
     this.cacheService.put(this.cacheKeys.Members, JSON.stringify(this.existingCards));
 
-    // invalidate the local cache
+    // invalidate the local cache for Referrals so it gets pulled fresh next time
     this.cacheService.put(this.cacheKeys.Referrals, null);
 
     this.clearSearch();
