@@ -29,7 +29,7 @@ export class MembersComponent implements OnInit {
 
   private getMembers(orgId: number) {
 
-    var memberData = this.cacheService.get(this.cacheKeys.Members);
+    let memberData = this.cacheService.get(this.cacheKeys.Members);
     if (memberData) {
       this.organization.Cards = JSON.parse(memberData);
       this.loading = false;
@@ -61,7 +61,7 @@ export class MembersComponent implements OnInit {
     let orgId = user.Organizations[0].Item2;
 
     this.loading = true;
-    var orgData = this.cacheService.get(this.cacheKeys.Organization);
+    let orgData = this.cacheService.get(this.cacheKeys.Organization);
     if (orgData) {
       this.organization = JSON.parse(orgData);
       this.getMembers(orgId);
@@ -72,7 +72,7 @@ export class MembersComponent implements OnInit {
         data => {
 
           this.organizationService.cacheOrganizationData(data);
-          var orgData = this.cacheService.get(this.cacheKeys.Organization);
+          orgData = this.cacheService.get(this.cacheKeys.Organization);
           this.organization = JSON.parse(orgData);
           this.getMembers(orgId);
         },

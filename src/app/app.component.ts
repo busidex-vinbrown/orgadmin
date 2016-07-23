@@ -7,7 +7,7 @@ import { ApiService, CacheService, CacheKeys } from './shared';
 import { User } from './shared/models';
 
 import '../styles/app.scss';
-import '../styles/font-awesome.scss';
+
 /* 
  * App Component
  * Top Level Component
@@ -79,7 +79,7 @@ export class AppComponent implements OnInit {
     this.loggedIn = user !== null;
 
     if (this.loggedIn) {
-      var orgData = this.cacheService.get(this.cacheKeys.Organization);
+      let orgData = this.cacheService.get(this.cacheKeys.Organization);
       if (orgData) {
         let organization = JSON.parse(orgData);
         this.ReferralLabel = organization.ReferralLabel;
@@ -87,8 +87,8 @@ export class AppComponent implements OnInit {
         this.organizationService.getOrganization(user.Organizations[0].Item2)
           .map((res: Response) => res.json())
           .subscribe(
-          data => {
-            this.organizationService.cacheOrganizationData(data);
+          _data => {
+            this.organizationService.cacheOrganizationData(_data);
             this.ReferralLabel = data.Model.ReferralLabel;
           },
           err => console.error(err),
@@ -104,27 +104,24 @@ export class AppComponent implements OnInit {
     this.Organization.Groups = [];
     this.setTabs();
 
-   switch(window.location.pathname){
-     case '/details':{
-       this.SetCurrentTab(TabItem.Details);
-       break;
-     }
-     case '/members':{
-       this.SetCurrentTab(TabItem.Members);
-       break;
-     }
-     case '/referrals':{
-       this.SetCurrentTab(TabItem.Referrals);
-       break;
-     }
-     case '/guests':{
-       this.SetCurrentTab(TabItem.Guests);
-       break;
-     }
-     case '/members/edit':{
-       this.SetCurrentTab(TabItem.AddMembers);
-       break;
-     }
-   }
+    switch (window.location.pathname) {
+      case '/details':
+        this.SetCurrentTab(TabItem.Details);
+        break;
+      case '/members':
+        this.SetCurrentTab(TabItem.Members);
+        break;
+      case '/referrals':
+        this.SetCurrentTab(TabItem.Referrals);
+        break;
+      case '/guests':
+        this.SetCurrentTab(TabItem.Guests);
+        break;
+      case '/members/edit':
+        this.SetCurrentTab(TabItem.AddMembers);
+        break;
+      default:
+        this.SetCurrentTab(TabItem.Details);
+    }
   }
 }

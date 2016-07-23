@@ -10,7 +10,7 @@ import { LocalStorage } from 'angular2-local-storage/local_storage';
 import { AppCookieOptions } from './app/shared/app-cookie-options';
 import { CacheService } from './app/shared/cache.service';
 import { CacheKeys } from './app/shared/cache-keys';
-
+require('font-awesome-webpack!./font-awesome.config.js');
 // depending on the env mode, enable prod mode or add debugging modules
 if (process.env.ENV === 'build') {
   enableProdMode();

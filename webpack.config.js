@@ -18,6 +18,7 @@ var ENV = process.env.npm_lifecycle_event;
 var isTest = ENV === 'test' || ENV === 'test-watch';
 var isProd = ENV === 'build';
 
+
 module.exports = function makeWebpackConfig() {
   /**
    * Config
@@ -45,7 +46,7 @@ module.exports = function makeWebpackConfig() {
    * Reference: http://webpack.github.io/docs/configuration.html#entry
    */
   config.entry = isTest ? {} : {
-    'polyfills': './src/polyfills.ts',
+    'polyfills': './src/polyfills.ts',    
     'vendor': './src/vendor.ts',
     'app': ['bootstrap-loader', './src/main.ts'] // our angular app
   };
@@ -69,7 +70,7 @@ module.exports = function makeWebpackConfig() {
     cache: !isTest,
     root: root(),
     // only discover files that have those extensions
-    extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html'],
+    extensions: ['', '.ts', '.js', '.json', '.css', '.scss', 'sass', '.html'],
     alias: {
       'app': 'src/app',
       'common': 'src/common'
@@ -84,6 +85,7 @@ module.exports = function makeWebpackConfig() {
    */
   config.module = {
     preLoaders: isTest ? [] : [{test: /\.ts$/, loader: 'tslint'}],
+    
     loaders: [
       // Support for .ts files.
       {
@@ -94,6 +96,12 @@ module.exports = function makeWebpackConfig() {
 
       // copy those assets to output
       {test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/, loader: 'file?name=fonts/[name].[hash].[ext]?'},
+
+      // For font-awesome
+      { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
+    
+      {test: /\.(less)$/i, loader: "style!css!less" },
 
       // Support for *.json files.
       {test: /\.json$/, loader: 'json'},

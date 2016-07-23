@@ -2,7 +2,7 @@
     <span for="select-choice-1" class="select" style="width: 70px; padding-top: 10px; font-size: 22px;">Add Members:</span>
     <div class="input-group">
         <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="Criteria"/>
-        <div class="input-group-addon" (click)="DoSearch()">
+        <div class="input-group-addon" (click)="doSearch()">
             <i class="fa fa-search"></i>
         </div>
         <div class="input-group-addon" (click)="Criteria = '';MemberSearch.Cards = [];">
@@ -10,7 +10,7 @@
         </div>
     </div>
     <hr />
-    <img src="../../img/spinner.gif" ng-show="Waiting" />
+    <img src="../../img/spinner.gif" ng-show="loading" />
     <div class="existing-members">
         <members></members>
     </div>

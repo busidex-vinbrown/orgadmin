@@ -32,7 +32,7 @@ export class DetailsComponent implements OnInit {
 
     if (user.StartPage === 'Organization') {
       let orgId = user.Organizations[0].Item2;
-      var orgData = this.cacheService.get(this.cacheKeys.Organization);
+      let orgData = this.cacheService.get(this.cacheKeys.Organization);
       if (orgData) {
         this.organization = JSON.parse(orgData);
         this.emailLink = 'mailto:' + this.organization.Email;

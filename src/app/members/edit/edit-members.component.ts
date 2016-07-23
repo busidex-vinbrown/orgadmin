@@ -4,7 +4,7 @@ import { Response } from '@angular/http';
 import { CacheService, CacheKeys } from '../../shared';
 import { User } from '../../shared/models';
 import { MembersComponent } from '../members.component';
-import '../../../styles/font-awesome.scss';
+//import '../../../styles/font-awesome.scss';
 
 @Component({
   selector: 'edit-members',
@@ -20,11 +20,15 @@ export class EditMembersComponent implements OnInit {
   showSelectedOnly: boolean;
   organization: any;
   loading: boolean;
-
+  
   constructor(
     private organizationService: OrganizationServiceComponent,
     private cacheService: CacheService,
     private cacheKeys: CacheKeys) {
+
+  }
+
+  doSearch(){
 
   }
 

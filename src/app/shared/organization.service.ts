@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
 import { Http, Headers } from '@angular/http';
 import { CacheService, CacheKeys } from '../shared';
 import { User } from '../shared/models';
@@ -52,8 +51,8 @@ export class OrganizationServiceComponent {
         return this.http.get(ROOT + '/Organization/GetReferrals/?organizationId=' + organizationId, { headers: headers });
     }
 
-    cacheOrganizationData(data){
-        data.Model.logo = data.Model.LogoFilePath + data.Model.LogoFileName + '.' +data.Model.LogoType;
+    cacheOrganizationData(data) {
+        data.Model.logo = data.Model.LogoFilePath + data.Model.LogoFileName + '.' + data.Model.LogoType;
         this.cacheService.put(this.cacheKeys.Organization, JSON.stringify(data.Model));
     }
 }
