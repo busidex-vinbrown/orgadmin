@@ -1,22 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-import { CacheService, CacheKeys } from '../shared';
+import { CacheService, CacheKeys, BaseService } from '../shared';
 import { User } from '../shared/models';
 
 const ROOT = 'https://www.busidexapi.com/api';
 
 @Injectable()
-export class OrganizationServiceComponent {
+export class OrganizationServiceComponent extends BaseService {
 
-    constructor(private http: Http, private cacheService: CacheService, private cacheKeys: CacheKeys) {
-
-    }
-
-    private getUserToken(): string {
-        let data = this.cacheService.get(this.cacheKeys.User);
-        let user: User = JSON.parse(data);
-
-        return (user !== null) ? user.Token : '';
+    constructor(protected http: Http, protected cacheService: CacheService, protected cacheKeys: CacheKeys) {
+        super(http, cacheService, cacheKeys)
     }
 
     getOrganization(id: number) {

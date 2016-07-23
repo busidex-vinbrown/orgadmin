@@ -5,6 +5,7 @@ import { provide } from '@angular/core';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTER_PROVIDERS } from './app/app.routes';
 import { OrganizationServiceComponent } from './app/shared/organization.service';
+import { SearchServiceComponent } from './app/shared/search.service';
 import { CookieService, BaseCookieOptions, CookieOptions } from 'angular2-cookie/core';
 import { LocalStorage } from 'angular2-local-storage/local_storage';
 import { AppCookieOptions } from './app/shared/app-cookie-options';
@@ -23,6 +24,7 @@ bootstrap(AppComponent, [
   HTTP_PROVIDERS,
   APP_ROUTER_PROVIDERS,
   OrganizationServiceComponent,
+  SearchServiceComponent,
   CookieService,
   CacheService,
   CacheKeys,

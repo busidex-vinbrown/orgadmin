@@ -1,17 +1,26 @@
 <div>
-    <span for="select-choice-1" class="select" style="width: 70px; padding-top: 10px; font-size: 22px;">Add Members:</span>
-    <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="Criteria"/>
-        <div class="input-group-addon" (click)="doSearch()">
+    <div class="input-group search-bar">
+        <input type="text" class="form-control" placeholder="Search for members to add..." (keypress)="handleKeyPress($event)" [(ngModel)]="criteria"/>
+        <div class="input-group-addon search-button" (click)="doSearch()">
             <i class="fa fa-search"></i>
         </div>
-        <div class="input-group-addon" (click)="Criteria = '';MemberSearch.Cards = [];">
+        <div class="input-group-addon clear-search" (click)="clearSearch()">
             &times;
         </div>
     </div>
     <hr />
-    <img src="../../img/spinner.gif" ng-show="loading" />
+    <div class="search-results">
+        <div style="display:inline-block;" *ngFor="#card of searchResults"
+            (click)="toggle(card)"
+            [ngClass]="{ 'search-results-container': true, 'selected': card.selected }">
+            <img [alt]="card.Name" [src]="card.imgSrc" 
+                [ngClass]="{ 'myCard' : card.IsMyCard, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
+                 style="position:relative" />
+        </div>
+    </div>
+    <img src="../../img/spinner.gif" *ngIf="searching" />
     <div class="existing-members">
+        <h2>Current Members</h2>
         <members></members>
     </div>
 </div>
