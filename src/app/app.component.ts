@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 import { TabItem } from './tab.enum';
 import { OrganizationServiceComponent } from './shared/organization.service';
-import { Response } from '@angular/http';
 import { ApiService, CacheService, CacheKeys } from './shared';
 import { User, OrganizationServiceEvents } from './shared/models';
 
@@ -73,7 +72,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     let data = this.cacheService.get(this.cacheKeys.User) || null;
     let user: User = JSON.parse(data);
     this.loggedIn = user !== null;
@@ -121,6 +120,9 @@ export class AppComponent implements OnInit {
         break;
       case '/members/edit':
         this.SetCurrentTab(TabItem.AddMembers);
+        break;
+      case '/referrals/edit':
+        this.SetCurrentTab(TabItem.AddReferrals);
         break;
       default:
         this.SetCurrentTab(TabItem.Details);

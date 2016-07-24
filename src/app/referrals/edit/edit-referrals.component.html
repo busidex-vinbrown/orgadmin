@@ -1,0 +1,29 @@
+<div>
+    <div class="navbar navbar-fixed-top search-bar">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for {{referralLabel}} to add..." (keypress)="handleKeyPress($event)"
+                [(ngModel)]="criteria" />
+            <div class="input-group-addon search-button" (click)="doSearch()">
+                <i class="fa fa-search"></i>
+            </div>
+            <div class="input-group-addon clear-search" (click)="clearSearch()">
+                &times;
+            </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top: 20px;" *ngIf="searchResults.length > 0" (click)="addSelected()">Add Selected</button>
+        <hr *ngIf="searchResults.length > 0"/>
+    </div>
+    <div class="search-results">
+        <div style="display:inline-block;" *ngFor="#card of searchResults" (click)="toggle(card)" [ngClass]="{ 'search-results-container': true, 'selected': card.selected }">
+            <img [alt]="card.Name" [src]="card.imgSrc" [ngClass]="{ 'myCard' : card.IsMyCard, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
+                style="position:relative" />
+        </div>
+    </div>
+    <img src="../../img/spinner.gif" *ngIf="searching" />
+    
+</div>
+<hr/>
+<div class="existing">
+    <h2>Current {{referralLabel}}</h2>
+    <referrals editMode="true"></referrals>
+</div>

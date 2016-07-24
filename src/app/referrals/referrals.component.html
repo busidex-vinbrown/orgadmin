@@ -2,7 +2,7 @@
     <div class="loader" *ngIf="loading">
         <img src="img/spinner.gif" />
     </div>
-    <div  *ngIf="!loading" class="referral-container">
+    <div *ngIf="!loading" class="referral-container card-container">
         <h5 *ngIf="referrals.length == 0">No {{noReferralsMessage}} To Show</h5>
         
         <div *ngFor="#card of referrals" class="referral-row">

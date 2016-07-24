@@ -13,7 +13,7 @@ import { User, Organization, OrganizationServiceEvents } from '../shared/models'
     templateUrl: './referrals.component.html'
 })
 export class ReferralsComponent implements OnInit {
-@Input() editMode: boolean;
+    @Input() editMode: boolean;
 
     guests: any[];
     loading: boolean;
@@ -27,12 +27,44 @@ export class ReferralsComponent implements OnInit {
 
     }
 
-    removeReferral(cardId: number){
+    removeReferral(cardId: number) {
 
     }
 
-    goToDetails(cardId: number){
+    goToDetails(cardId: number) {
 
+    }
+
+    private getReferrals(orgId: number) {
+        let organizationData = this.cacheService.get(this.cacheKeys.Organization);
+        let organization: Organization = JSON.parse(organizationData);
+
+        this.noReferralsMessage = organization.ReferralLabel;
+
+        this.organizationService.getReferrals(orgId)
+            .map((res: Response) => res.json())
+            .subscribe(
+            data2 => {
+
+                this.referrals = [];
+
+                for (let i = 0; i < data2.Model.length; i++) {
+                    let card = data2.Model[i].Card;
+                    card.imgSrc = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
+                    card.emailLink = 'mailto:' + card.Email;
+                    card.Notes = decodeURIComponent(data2.Model[i].Notes);
+                    if (card.Notes === 'null') {
+                        card.Notes = '';
+                    }
+                    this.referrals.push(card);
+                }
+
+                this.cacheService.put(this.cacheKeys.Referrals, JSON.stringify(this.referrals));
+                this.loading = false;
+            },
+            err => console.error(err),
+            () => console.log('done')
+            );
     }
 
     ngOnInit() {
@@ -60,37 +92,13 @@ export class ReferralsComponent implements OnInit {
         this.organizationService.subscribe((event: OrganizationServiceEvents) => {
             console.log('Referral component listening to event: ' + event);
 
+            if (event === OrganizationServiceEvents.ReferralsUpdated) {
+                this.referrals = [];
+                this.getReferrals(orgId);
+            }
+
             if (event === OrganizationServiceEvents.OrganizationReceived) {
-                
-                let organizationData = this.cacheService.get(this.cacheKeys.Organization);
-                let organization: Organization = JSON.parse(organizationData);
-
-                this.noReferralsMessage = organization.ReferralLabel;
-
-                this.organizationService.getReferrals(orgId)
-                    .map((res: Response) => res.json())
-                    .subscribe(
-                    data2 => {
-
-                        this.referrals = [];
-
-                        for (let i = 0; i < data2.Model.length; i++) {
-                            let card = data2.Model[i].Card;
-                            card.imgSrc = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
-                            card.emailLink = 'mailto:' + card.Email;
-                            card.Notes = decodeURIComponent(data2.Model[i].Notes);
-                            if(card.Notes === 'null'){
-                                card.Notes = '';
-                            }
-                            this.referrals.push(card);
-                        }
-
-                        this.cacheService.put(this.cacheKeys.Referrals, JSON.stringify(this.referrals));
-                        this.loading = false;
-                    },
-                    err => console.error(err),
-                    () => console.log('done')
-                    );
+                this.getReferrals(orgId);
             }
         });
     }

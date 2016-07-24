@@ -7,7 +7,7 @@
       <a [routerLink]="['/members/edit']">Add Members +</a>
     </li>
     <li (click)="SetCurrentTab(TabItems.AddReferrals)" [ngClass]="{active: Tabs[TabItems.AddReferrals]}">
-      <a>Add {{ReferralLabel}} +</a>
+      <a [routerLink]="['/referrals/edit']">Add {{ReferralLabel}} +</a>
     </li>
     <li (click)="SetCurrentTab(TabItems.AddGroup)" [ngClass]="{active: Tabs[TabItems.AddGroup]}">
       <a >Add Group +</a>

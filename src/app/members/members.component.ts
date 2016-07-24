@@ -87,14 +87,14 @@ export class MembersComponent implements OnInit {
     // Subscribe to organization service events
     this.organizationService.subscribe((event: OrganizationServiceEvents) => {
       console.log('Members component listening to event: ' + event);
-      if (event === OrganizationServiceEvents.MembersUpdated) {        
+      if (event === OrganizationServiceEvents.MembersUpdated) {
         this.organization.Cards = [];
         this.getMembers(orgId);
       }
-      if(event === OrganizationServiceEvents.OrganizationReceived){
-          orgData = this.cacheService.get(this.cacheKeys.Organization);
-          this.organization = JSON.parse(orgData);
-          this.getMembers(orgId);
+      if (event === OrganizationServiceEvents.OrganizationReceived) {
+        orgData = this.cacheService.get(this.cacheKeys.Organization);
+        this.organization = JSON.parse(orgData);
+        this.getMembers(orgId);
       }
     });
   }

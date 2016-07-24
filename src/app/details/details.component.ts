@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
-import { Response } from '@angular/http';
 import { CacheService, CacheKeys } from '../shared';
 import { User, OrganizationServiceEvents } from '../shared/models';
 
@@ -29,7 +28,7 @@ export class DetailsComponent implements OnInit {
 
     let userData = this.cacheService.get(this.cacheKeys.User);
     let user: User = JSON.parse(userData);
-    
+
     if (user.StartPage === 'Organization') {
       let orgId = user.Organizations[0].Item2;
       let orgData = this.cacheService.get(this.cacheKeys.Organization);
@@ -46,15 +45,15 @@ export class DetailsComponent implements OnInit {
       this.organizationService.subscribe((event: OrganizationServiceEvents) => {
         console.log('Details component listening to event: ' + event);
 
-        if(event === OrganizationServiceEvents.OrganizationReceived){
-            orgData = this.cacheService.get(this.cacheKeys.Organization);
-            this.organization = JSON.parse(orgData);
-            this.emailLink = 'mailto:' + this.organization.Email;
-            this.organization.logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
-            this.loading = false;
+        if (event === OrganizationServiceEvents.OrganizationReceived) {
+          orgData = this.cacheService.get(this.cacheKeys.Organization);
+          this.organization = JSON.parse(orgData);
+          this.emailLink = 'mailto:' + this.organization.Email;
+          this.organization.logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
+          this.loading = false;
         }
       });
-      
+
     } else {
       if (window.location.href.indexOf('localhost') >= 0) {
         window.location.href = '/login';

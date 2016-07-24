@@ -23,7 +23,7 @@ export class OrganizationServiceComponent extends BaseService {
 
                 this.cacheService.put(this.cacheKeys.Organization, JSON.stringify(data.Model));
                 this.emit(OrganizationServiceEvents.OrganizationReceived);
-                
+
             });
     }
 
@@ -83,6 +83,25 @@ export class OrganizationServiceComponent extends BaseService {
                 this.cacheService.put(this.cacheKeys.Members, null);
 
                 this.emit(OrganizationServiceEvents.MembersUpdated);
+                return response;
+            });
+    }
+
+    addReferral(cardId: number) {
+        let headers = new Headers();
+        let token = this.getUserToken();
+        headers.append('X-Authorization-Token', token);
+
+        headers.append('Content-Type', 'application/json');
+
+        // don't send userId as a parameter. The server validates the userId from the token in the header.
+        let url = ROOT + '/Busidex/Post?userId=0' + '&cardId=' + cardId;
+        this.http.post(url, {}, { headers: headers })
+            .subscribe((response: Response) => {
+
+                this.cacheService.put(this.cacheKeys.Members, null);
+
+                this.emit(OrganizationServiceEvents.ReferralsUpdated);
                 return response;
             });
     }
