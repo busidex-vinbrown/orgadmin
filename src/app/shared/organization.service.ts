@@ -95,11 +95,30 @@ export class OrganizationServiceComponent extends BaseService {
         headers.append('Content-Type', 'application/json');
 
         // don't send userId as a parameter. The server validates the userId from the token in the header.
-        let url = ROOT + '/Busidex/Post?userId=0' + '&cardId=' + cardId;
+        let url = ROOT + '/Busidex/Post?userId=0' + '&cId=' + cardId;
         this.http.post(url, {}, { headers: headers })
             .subscribe((response: Response) => {
 
                 this.cacheService.put(this.cacheKeys.Members, null);
+
+                this.emit(OrganizationServiceEvents.ReferralsUpdated);
+                return response;
+            });
+    }
+
+    removeReferral(cardId: number) {
+        let headers = new Headers();
+        let token = this.getUserToken();
+        headers.append('X-Authorization-Token', token);
+
+        headers.append('Content-Type', 'application/json');
+
+        // don't send userId as a parameter. The server validates the userId from the token in the header.
+        let url = ROOT + '/Busidex/Delete?id=' + cardId + '&userId=0';
+        this.http.delete(url, { headers: headers })
+            .subscribe((response: Response) => {
+
+                this.cacheService.put(this.cacheKeys.Referrals, null);
 
                 this.emit(OrganizationServiceEvents.ReferralsUpdated);
                 return response;

@@ -18,7 +18,7 @@ export class ReferralsComponent implements OnInit {
     guests: any[];
     loading: boolean;
     referrals: any[];
-    noReferralsMessage: string;
+    referralLabel: string;
 
     constructor(
         private organizationService: OrganizationServiceComponent,
@@ -27,8 +27,10 @@ export class ReferralsComponent implements OnInit {
 
     }
 
-    removeReferral(cardId: number) {
-
+    removeReferral(card: any) {
+        if (window.confirm('Are you sure you want to remove ' + card.Name || card.CompanyName + '?')) {
+            this.organizationService.removeReferral(card.CardId);
+        }
     }
 
     goToDetails(cardId: number) {
@@ -39,7 +41,7 @@ export class ReferralsComponent implements OnInit {
         let organizationData = this.cacheService.get(this.cacheKeys.Organization);
         let organization: Organization = JSON.parse(organizationData);
 
-        this.noReferralsMessage = organization.ReferralLabel;
+        this.referralLabel = organization.ReferralLabel;
 
         this.organizationService.getReferrals(orgId)
             .map((res: Response) => res.json())
@@ -78,10 +80,6 @@ export class ReferralsComponent implements OnInit {
         let referralData = this.cacheService.get(this.cacheKeys.Referrals);
         if (referralData) {
             this.referrals = JSON.parse(referralData);
-
-            let organizationData = this.cacheService.get(this.cacheKeys.Organization);
-            let organization: Organization = JSON.parse(organizationData);
-            this.noReferralsMessage = organization.ReferralLabel;
 
             this.loading = false;
         } else {
