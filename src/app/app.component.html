@@ -13,7 +13,7 @@
       <a >Add Group +</a>
     </li>
     <li (click)="SetCurrentTab(TabItems.EditDetails)" [ngClass]="{active: Tabs[TabItems.EditDetails]}">
-      <a >Edit Details</a>
+      <a [routerLink]="['/details/edit']">Edit Details</a>
     </li>
     <li (click)="SetCurrentTab(TabItems.HomePage)" [ngClass]="{active: Tabs[TabItems.HomePage]}">
       <a >Edit Message</a>

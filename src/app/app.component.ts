@@ -109,6 +109,9 @@ export class AppComponent implements OnInit {
       case '/details':
         this.SetCurrentTab(TabItem.Details);
         break;
+      case '/details/edit':
+        this.SetCurrentTab(TabItem.EditDetails);
+        break;
       case '/members':
         this.SetCurrentTab(TabItem.Members);
         break;

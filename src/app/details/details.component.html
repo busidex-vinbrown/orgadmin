@@ -5,7 +5,7 @@
     <div class="card-block">
         <h3 class="card-title">{{organization.Name}}</h3>
     </div>
-    <img class="card-img-top orgLogo" [src]="organization.logo" *ngIf="organization.LogoFileName != null" />
+    <img class="card-img-top orgLogo" [src]="_logo" *ngIf="organization.LogoFileName != null" />
 
     <div class="card-block">
         <img class="web" src="img/browser.jpg" />

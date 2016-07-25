@@ -1,0 +1,78 @@
+<form>
+    <!--LOGO-->
+    <div class="form-group row">
+        <label for="name" class="col-sm-2 form-control-label">Logo</label>
+        <div class="col-md-8">
+            <label class="file">
+                <input class="col-md-8" type="file" id="file" [(ngModel)]="organization.Logo">
+                <span class="file-custom"></span>
+            </label>
+        </div>
+    </div>
+    <!--NAME-->
+    <div class="form-group row">
+        <label for="name" class="col-sm-2 form-control-label">Name</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="name" placeholder="Name" [(ngModel)]="organization.Name">
+        </div>
+    </div>
+    <!--CONTACTS-->
+    <div class="form-group row">
+        <label for="contacts" class="col-sm-2 form-control-label">Contacts</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="contacts" placeholder="Organization Contacts" [(ngModel)]="organization.Contacts">
+        </div>
+    </div>
+    <!--EMAIL-->
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 form-control-label">Email</label>
+        <div class="col-md-8">
+            <input type="email" class="form-control" id="inputEmail3" placeholder="Organization Email(s)" [(ngModel)]="organization.Email">
+        </div>
+    </div>
+    <!--URL-->
+    <div class="form-group row">
+        <label for="url" class="col-sm-2 form-control-label">Url</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="url" placeholder="Organization Website Address" [(ngModel)]="organization.Url">
+        </div>
+    </div>
+    <!--PHONE-->
+    <div class="form-group row">
+        <label for="phone" class="col-sm-2 form-control-label">Phone</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="phone" placeholder="Phone Number(s)" [(ngModel)]="organization.Phone">
+        </div>
+    </div>
+    <!--FAX-->
+    <div class="form-group row">
+        <label for="fax" class="col-sm-2 form-control-label">Fax</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="fax" placeholder="Fax Number(s)" [(ngModel)]="organization.Fax">
+        </div>
+    </div>
+    <!--TWITTER-->
+    <div class="form-group row">
+        <label for="twitter" class="col-sm-2 form-control-label">Twitter</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="twitter" placeholder="Twitter Url" [(ngModel)]="organization.Twitter">
+        </div>
+    </div>
+    <!--FACEBOOK-->
+    <div class="form-group row">
+        <label for="facebook" class="col-sm-2 form-control-label">Facebook</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="facebook" placeholder="Facebook Url" [(ngModel)]="organization.Facebook">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="private" class="col-sm-2 form-control-label">Private</label>
+        <div class="col-md-8">
+            <input type="checkbox" [(ngModel)]="isPrivate">
+        </div>
+    </div>
+    <div class="form-group row">
+        <img class="col-md-offset-9 saving" src="img/spinner.gif" *ngIf="saving" />
+        <button class="btn btn-lg btn-primary col-md-offset-9" type="button" (click)="save()" *ngIf="!saving">Save</button>
+    </div>
+</form>

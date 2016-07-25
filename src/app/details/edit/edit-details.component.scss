@@ -1,0 +1,15 @@
+form{
+    margin-top: 25px;
+}
+.form-control-label{
+    font-weight: bold;
+    text-align: right;
+}
+.file-custom::after{
+    content: 'Choose your organization logo...'
+}
+img.saving{
+    height: 60px;
+    padding-left: 15px;
+    width: 75px;
+}

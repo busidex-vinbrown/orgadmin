@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { CacheService, CacheKeys, BaseService } from '../shared';
-import { OrganizationServiceEvents } from '../shared/models';
+import { OrganizationServiceEvents, Organization } from '../shared/models';
 
 const ROOT = 'https://www.busidexapi.com/api';
 
@@ -125,8 +125,25 @@ export class OrganizationServiceComponent extends BaseService {
             });
     }
 
+    updateOrganization(organization: Organization) {
+        let headers = new Headers();
+        let token = this.getUserToken();
+        headers.append('X-Authorization-Token', token);
+        headers.append('Content-Type', 'application/json');
+
+        // don't send userId as a parameter. The server validates the userId from the token in the header.
+        let url = ROOT + '/Organization/Update';
+        this.http.put(url, organization, { headers: headers })
+            .subscribe((response: Response) => {
+
+                this.cacheService.put(this.cacheKeys.Organization, null);
+
+                this.emit(OrganizationServiceEvents.OrganizationUpdated);
+                return response;
+            });
+    }
+
     cacheOrganizationData(data) {
-        data.Model.logo = data.Model.LogoFilePath + data.Model.LogoFileName + '.' + data.Model.LogoType;
         this.cacheService.put(this.cacheKeys.Organization, JSON.stringify(data.Model));
     }
 }

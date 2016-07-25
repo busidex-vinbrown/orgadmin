@@ -16,7 +16,8 @@ export class DetailsComponent implements OnInit {
   organization: any;
   emailLink: string;
   loading: boolean;
-
+  _logo: string;
+  
   constructor(
     private organizationService: OrganizationServiceComponent,
     private cacheService: CacheService,
@@ -35,7 +36,7 @@ export class DetailsComponent implements OnInit {
       if (orgData) {
         this.organization = JSON.parse(orgData);
         this.emailLink = 'mailto:' + this.organization.Email;
-        this.organization.logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
+        this._logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
       } else {
         this.loading = true;
         this.organizationService.getOrganization(orgId);
@@ -49,7 +50,7 @@ export class DetailsComponent implements OnInit {
           orgData = this.cacheService.get(this.cacheKeys.Organization);
           this.organization = JSON.parse(orgData);
           this.emailLink = 'mailto:' + this.organization.Email;
-          this.organization.logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
+          this._logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
           this.loading = false;
         }
       });
