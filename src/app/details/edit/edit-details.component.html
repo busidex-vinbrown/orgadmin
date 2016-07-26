@@ -1,78 +1,96 @@
-<form>
+<form [formGroup]="detailsForm" (ngSubmit)="save()">
     <!--LOGO-->
-    <div class="form-group row">
+    <!--<div class="form-group row">
         <label for="name" class="col-sm-2 form-control-label">Logo</label>
         <div class="col-md-8">
             <label class="file">
-                <input class="col-md-8" type="file" id="file" [(ngModel)]="organization.Logo">
+                <input class="col-md-8" type="file" id="file">
                 <span class="file-custom"></span>
             </label>
         </div>
-    </div>
+    </div>-->
     <!--NAME-->
     <div class="form-group row">
-        <label for="name" class="col-sm-2 form-control-label">Name</label>
+        <label for="name" class="col-sm-2 form-control-label">Name</label><span class="dirty" *ngIf="detailsForm.controls['name'].dirty">*</span>
         <div class="col-md-8">
-            <input type="text" class="form-control" id="name" placeholder="Name" [(ngModel)]="organization.Name">
+            <input type="text" class="form-control" id="name" placeholder="Name" 
+                [formControl]="detailsForm.controls['name']"
+                [(ngModel)]="organization.Name">
         </div>
     </div>
     <!--CONTACTS-->
     <div class="form-group row">
-        <label for="contacts" class="col-sm-2 form-control-label">Contacts</label>
+        <label for="contacts" class="col-sm-2 form-control-label">Contacts</label><span class="dirty" *ngIf="detailsForm.controls['contacts'].dirty">*</span>
         <div class="col-md-8">
-            <input type="text" class="form-control" id="contacts" placeholder="Organization Contacts" [(ngModel)]="organization.Contacts">
+            <input type="text" class="form-control" id="contacts" placeholder="Organization Contacts" 
+                [formControl]="detailsForm.controls['contacts']"
+                [(ngModel)]="organization.Contacts">
         </div>
     </div>
     <!--EMAIL-->
     <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 form-control-label">Email</label>
+        <label for="inputEmail3" class="col-sm-2 form-control-label">Email</label><span class="dirty" *ngIf="detailsForm.controls['email'].dirty">*</span>
         <div class="col-md-8">
-            <input type="email" class="form-control" id="inputEmail3" placeholder="Organization Email(s)" [(ngModel)]="organization.Email">
+            <input type="email" class="form-control" id="inputEmail3" placeholder="Organization Email(s)" 
+                [formControl]="detailsForm.controls['email']"
+                [(ngModel)]="organization.Email">
         </div>
     </div>
     <!--URL-->
     <div class="form-group row">
-        <label for="url" class="col-sm-2 form-control-label">Url</label>
+        <label for="url" class="col-sm-2 form-control-label">Url</label><span class="dirty" *ngIf="detailsForm.controls['url'].dirty">*</span>
         <div class="col-md-8">
-            <input type="text" class="form-control" id="url" placeholder="Organization Website Address" [(ngModel)]="organization.Url">
+            <input type="text" class="form-control" id="url" placeholder="Organization Website Address" 
+                [formControl]="detailsForm.controls['url']"
+                [(ngModel)]="organization.Url">
         </div>
     </div>
     <!--PHONE-->
     <div class="form-group row">
-        <label for="phone" class="col-sm-2 form-control-label">Phone</label>
+        <label for="phone" class="col-sm-2 form-control-label">Phone</label><span class="dirty" *ngIf="detailsForm.controls['phone1'].dirty">*</span>
         <div class="col-md-8">
-            <input type="text" class="form-control" id="phone" placeholder="Phone Number(s)" [(ngModel)]="organization.Phone">
+            <input type="text" class="form-control" id="phone" placeholder="Phone Number(s)" 
+                [formControl]="detailsForm.controls['phone1']"
+                [(ngModel)]="organization.Phone1">
         </div>
     </div>
     <!--FAX-->
     <div class="form-group row">
-        <label for="fax" class="col-sm-2 form-control-label">Fax</label>
+        <label for="fax" class="col-sm-2 form-control-label">Fax</label><span class="dirty" *ngIf="detailsForm.controls['phone2'].dirty">*</span>
         <div class="col-md-8">
-            <input type="text" class="form-control" id="fax" placeholder="Fax Number(s)" [(ngModel)]="organization.Fax">
+            <input type="text" class="form-control" id="fax" placeholder="Fax Number(s)" 
+                [formControl]="detailsForm.controls['phone2']"
+                [(ngModel)]="organization.Phone2">            
         </div>
     </div>
     <!--TWITTER-->
     <div class="form-group row">
-        <label for="twitter" class="col-sm-2 form-control-label">Twitter</label>
+        <label for="twitter" class="col-sm-2 form-control-label">Twitter</label><span class="dirty" *ngIf="detailsForm.controls['twitter'].dirty">*</span>
         <div class="col-md-8">
-            <input type="text" class="form-control" id="twitter" placeholder="Twitter Url" [(ngModel)]="organization.Twitter">
+            <input type="text" class="form-control" id="twitter" placeholder="Twitter Url" 
+                [formControl]="detailsForm.controls['twitter']"
+                [(ngModel)]="organization.Twitter">
         </div>
     </div>
     <!--FACEBOOK-->
     <div class="form-group row">
-        <label for="facebook" class="col-sm-2 form-control-label">Facebook</label>
+        <label for="facebook" class="col-sm-2 form-control-label">Facebook</label><span class="dirty" *ngIf="detailsForm.controls['facebook'].dirty">*</span>
         <div class="col-md-8">
-            <input type="text" class="form-control" id="facebook" placeholder="Facebook Url" [(ngModel)]="organization.Facebook">
+            <input type="text" class="form-control" id="facebook" placeholder="Facebook Url" 
+                [formControl]="detailsForm.controls['facebook']"
+                [(ngModel)]="organization.Facebook">
         </div>
     </div>
     <div class="form-group row">
-        <label for="private" class="col-sm-2 form-control-label">Private</label>
+        <label for="private" class="col-sm-2 form-control-label">Private</label><span class="dirty" *ngIf="detailsForm.controls['isPrivate'].dirty">*</span>
         <div class="col-md-8">
-            <input type="checkbox" [(ngModel)]="isPrivate">
+            <input type="checkbox" 
+                [formControl]="detailsForm.controls['isPrivate']"
+                [(ngModel)]="isPrivate">
         </div>
     </div>
     <div class="form-group row">
         <img class="col-md-offset-9 saving" src="img/spinner.gif" *ngIf="saving" />
-        <button class="btn btn-lg btn-primary col-md-offset-9" type="button" (click)="save()" *ngIf="!saving">Save</button>
+        <button class="btn btn-lg btn-primary col-md-offset-9" type="submit" *ngIf="!saving" [disabled]="!detailsForm.dirty">Save</button>
     </div>
 </form>

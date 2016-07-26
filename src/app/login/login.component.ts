@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { CacheService, CacheKeys } from '../shared';
 import { LoginServiceComponent } from './login.service';
 import { LoginParams } from './login-params';
+import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'login',
   providers: [LoginServiceComponent],
-  directives: [],
+  directives: [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
   pipes: [],
   styles: [require('./login.component.scss')],
   templateUrl: './login.component.html'
@@ -19,16 +20,28 @@ export class LoginComponent implements OnInit {
   LoginErrors: any[] = [];
   waiting: boolean = false;
   cacheService: CacheService;
-  cacheKeys: CacheKeys;
+  loginForm: FormGroup;
 
   constructor(
-    private _loginService: LoginServiceComponent,
-    private _cacheSerice: CacheService,
-    private _cacheKeys: CacheKeys,
-    private router: Router) {
+    private loginService: LoginServiceComponent,
+    private cacheSerice: CacheService,
+    private cacheKeys: CacheKeys,
+    private router: Router,
+    private formBuilder: FormBuilder) {
 
-    this.cacheService = _cacheSerice;
-    this.cacheKeys = _cacheKeys;
+    this.cacheService = cacheSerice;
+    this.cacheKeys = cacheKeys;
+    this.loginParams = {
+      UserName: '',
+      Password: '',
+      Token: '',
+      EventTag: '',
+      AcceptSharedCards: false
+    };
+    this.loginForm = this.formBuilder.group({
+      'username': [this.loginParams.UserName, Validators.required],
+      'password': [this.loginParams.Password, Validators.required]
+    });
   }
 
   doLogin() {
@@ -40,30 +53,33 @@ export class LoginComponent implements OnInit {
     let waiting = this.waiting;
 
     this.waiting = true;
-    this._loginService.login(this.loginParams)
+
+    this.loginService.login(this.loginParams)
       .subscribe(
       (user: any) => {
 
         cache.put(cacheKeys.User, user._body);
-        waiting = false;
+        this.waiting = false;
         loginErrors = [];
         router.navigate(['/details']);
       },
       (error) => {
-        waiting = false;
-        loginErrors.push(error);
+        let errorMessage = '';
+        if (error.status === 404) {
+          errorMessage = 'Invalid username / password combination';
+        } else {
+          errorMessage = 'There was a problem logging in.';
+        }
+        this.waiting = false;
+        this.LoginErrors.push(errorMessage);
       }
       );
   }
 
   ngOnInit() {
-    this.loginParams = {
-      UserName: '',
-      Password: '',
-      Token: '',
-      EventTag: '',
-      AcceptSharedCards: false
-    };
+
     this.LoginErrors = [];
+
+
   }
 }
