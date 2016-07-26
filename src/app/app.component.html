@@ -16,7 +16,7 @@
       <a [routerLink]="['/details/edit']">Edit Details</a>
     </li>
     <li (click)="SetCurrentTab(TabItems.HomePage)" [ngClass]="{active: Tabs[TabItems.HomePage]}">
-      <a >Edit Message</a>
+      <a [routerLink]="['/edit-message']">Edit Message</a>
     </li>
     <li>
       <hr/>

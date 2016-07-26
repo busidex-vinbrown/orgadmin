@@ -8,6 +8,7 @@ import { guestsRoutes } from './guests/guests.routes';
 import { referralsRoutes } from './referrals/referrals.routes';
 import { loginRoutes } from './login/login.routes';
 import { logoutRoutes } from './logout/logout.routes';
+import { editMessageRoutes } from './edit-message/edit-message.routes';
 
 export const routes: RouterConfig = [
 
@@ -19,7 +20,8 @@ export const routes: RouterConfig = [
   ...guestsRoutes,
   ...referralsRoutes,
   ...loginRoutes,
-  ...logoutRoutes
+  ...logoutRoutes,
+  ...editMessageRoutes
 ];
 
 export const APP_ROUTER_PROVIDERS = [

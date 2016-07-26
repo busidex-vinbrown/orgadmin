@@ -50,7 +50,6 @@ export class LoginComponent implements OnInit {
     let cacheKeys = this.cacheKeys;
     let router = this.router;
     let loginErrors = this.LoginErrors;
-    let waiting = this.waiting;
 
     this.waiting = true;
 

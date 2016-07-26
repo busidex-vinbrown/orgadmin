@@ -17,7 +17,7 @@ export class DetailsComponent implements OnInit {
   emailLink: string;
   loading: boolean;
   _logo: string;
-  
+
   constructor(
     private organizationService: OrganizationServiceComponent,
     private cacheService: CacheService,

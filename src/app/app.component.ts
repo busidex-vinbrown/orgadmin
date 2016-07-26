@@ -127,6 +127,9 @@ export class AppComponent implements OnInit {
       case '/referrals/edit':
         this.SetCurrentTab(TabItem.AddReferrals);
         break;
+      case '/edit-message':
+        this.SetCurrentTab(TabItem.HomePage);
+        break;
       default:
         this.SetCurrentTab(TabItem.Details);
     }
