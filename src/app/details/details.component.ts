@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { CacheService, CacheKeys } from '../shared';
-import { User, OrganizationServiceEvents } from '../shared/models';
+import { User, Organization, OrganizationServiceEvents } from '../shared/models';
 
 @Component({
   selector: 'my-details',
@@ -13,7 +13,7 @@ import { User, OrganizationServiceEvents } from '../shared/models';
 })
 export class DetailsComponent implements OnInit {
 
-  organization: any;
+  organization: Organization;
   emailLink: string;
   loading: boolean;
   _logo: string;

@@ -1,0 +1,10 @@
+<div class="container">
+    <h1>Home Page Message
+        <small>This content will appear on the organization homepage. You can use this to communicate important information, recognize member
+        achievements, or other communications.
+    </small>
+    </h1>
+    <wysiwyg #messageEditor></wysiwyg>
+    <img class="saving pull-right" src="img/spinner.gif" [ngClass]="{ 'hidden': !loading }"/>
+    <button class="btn btn-primary pull-right" [ngClass]="{ 'hidden': loading }"  (click)="save()">Save</button>
+</div>

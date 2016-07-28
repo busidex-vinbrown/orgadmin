@@ -21,11 +21,11 @@
     </div>
     <div class="card-block" *ngIf="organization.Phone1 != null && organization.Phone1.length > 0">
         <img class="detail-icon" src="img/phone.png" />
-        Phone:&nbsp;{{Organization.Phone1}}
+        <span>{{organization.Phone1}}</span>
     </div>
     <div class="card-block" *ngIf="organization.Phone2 != null && organization.Phone2.length > 0">
         <img class="detail-icon" src="img/fax.png" />
-        Fax:&nbsp;{{Organization.Phone2}}
+        <span>{{organization.Phone2}}</span>
     </div>
     <div class="card-block" *ngIf="organization.Twitter != null && organization.Twitter.length > 0">
         <img class="detail-icon" src="img/twitter.png" />

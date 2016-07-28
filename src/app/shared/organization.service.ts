@@ -20,10 +20,8 @@ export class OrganizationServiceComponent extends BaseService {
         this.http.get(ROOT + '/Organization/Get/' + id, { headers: headers })
             .map((res: Response) => res.json())
             .subscribe((data) => {
-
                 this.cacheService.put(this.cacheKeys.Organization, JSON.stringify(data.Model));
                 this.emit(OrganizationServiceEvents.OrganizationReceived);
-
             });
     }
 

@@ -1,108 +1,75 @@
-import {Component, Output, Input, EventEmitter, OnChanges, SimpleChange, ElementRef} from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { WysiwygComponent } from './wysiwyg.component';
+import { OrganizationServiceComponent } from '../shared/organization.service';
+import { CacheService, CacheKeys } from '../shared';
+import { User, Organization, OrganizationServiceEvents } from '../shared/models';
 
-declare var $;
-
-require('!style!css!summernote/dist/bs4/summernote.css');
-require('summernote/dist/bs4/summernote');
+declare var $: any;
 
 @Component({
     selector: 'edit-message',
+    providers: [],
+    directives: [WysiwygComponent],
+    pipes: [],
     styles: [require('./edit-message.component.scss')],
-    template: `<div></div>`
-}) export class EditMessageComponent implements OnChanges {
-    $summernoteDom;
-    $editArea;
+    templateUrl: './edit-message.component.html'
+})
+export class EditMessageComponent implements OnInit, AfterViewInit {
+    @ViewChild('messageEditor') messageEditor;
 
-    cursorElement: Element;
-    cursorPosition: number;
+    organization: Organization;
+    loading: boolean;
+    $messageEditor: Element;
 
-    @Input() editorHeight: number;
-    @Input() content: string = '';
+    constructor(
+        private organizationService: OrganizationServiceComponent,
+        private cacheService: CacheService,
+        private cacheKeys: CacheKeys) {
 
-    @Output() public onKeyDown = new EventEmitter();
-    @Output() public onClick = new EventEmitter();
-    @Output() public onKeyUp = new EventEmitter();
-    @Output() public onChange = new EventEmitter();
+    }
 
-    constructor(private _elementRef: ElementRef) { }
+    ngAfterViewInit(){
+        this.$messageEditor = document.querySelector('.note-editor');
+        this.getOrganizationData();
+    }
 
-    ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-        let contentChange = changes['content'];
+    save() {
+        this.loading = true;
+        this.organization.HomePage = this.messageEditor.getRawHtml();
+        this.organizationService.updateOrganization(this.organization);
+    }
 
-        if (contentChange) {
-            this.setRawHtml(contentChange.currentValue);
+    private getOrganizationData() {
+        let userData = this.cacheService.get(this.cacheKeys.User);
+        let user: User = JSON.parse(userData);
+
+        let orgId = user.Organizations[0].Item2;
+        let orgData = this.cacheService.get(this.cacheKeys.Organization);
+        if (orgData) {
+            this.organization = JSON.parse(orgData);
+            this.messageEditor.setRawHtml(this.organization.HomePage);
+
+            this.loading = false;
+        } else {
+            this.loading = true;
+            this.organizationService.getOrganization(orgId);
         }
     }
 
-    ngAfterViewInit() {
-        let self = this;
-        this.$editArea = $('.note-editable');
-        this.$summernoteDom = $(this._elementRef.nativeElement);
-        this.$summernoteDom.summernote({
-            disableResizeEditor: false,
-            disableDragAndDrop: true,
-            height: this.editorHeight || 100,
-            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Tahoma', 'Geneva', 'Helvetica', 'Impact', 'Courier New', 'Monaco', 'Charcoal', 'Lucida Console', 'Lucida Grande', 'Palatino Linotype', 'Book Antiqua', 'Palatino', 'Merriweather', 'Times New Roman', 'Verdana'],
-            toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['font', ['strikethrough', 'superscript', 'subscript']],
-                ['fontname', ['fontname']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['height', ['height']]
-            ]
+    ngOnInit() {
+
+        
+
+        this.organizationService.subscribe((event: OrganizationServiceEvents) => {
+            console.log('Details component listening to event: ' + event);
+
+            if (event === OrganizationServiceEvents.OrganizationUpdated) {
+                this.getOrganizationData();
+            }
+
+            if (event === OrganizationServiceEvents.OrganizationReceived) {
+                this.getOrganizationData();
+            }
         });
-
-        this.$summernoteDom.on('summernote.keyup', (we, e) => {
-            this.$summernoteDom.summernote('editor.saveRange');
-            this.onKeyUp.emit(this.getRawHtml());
-        });
-
-        this.$summernoteDom.on('summernote.change', (we, contents) => {
-            this.onChange.emit(contents);
-        });
-
-        this.$summernoteDom.on('summernote.keydown', (we, contents) => {
-            this.onKeyDown.emit(contents);
-        });
-
-        document
-            .querySelector('.note-editor')
-            .addEventListener('click', () => {
-                this.$summernoteDom.summernote('editor.saveRange');
-            });
-
-        this.setRawHtml(this.content);
-    }
-
-    getRawHtml() {
-        return this.$summernoteDom.summernote('code');
-    }
-
-    setRawHtml(code) {
-        if (this.$summernoteDom && code) {
-            this.$summernoteDom.summernote('code', code);
-        }
-    }
-
-    updateContent() {
-        this.$summernoteDom.summernote('code', '');
-        this.$summernoteDom.summernote('code', this.content);
-    }
-
-    insertAtCurrentLocation(value) {
-        this.$summernoteDom.summernote('editor.restoreRange');
-        this.$summernoteDom.summernote('editor.focus');
-        this.$summernoteDom.summernote('editor.insertText', value);
-    }
-
-    clearContents() {
-        this.$summernoteDom.summernote('reset');
-    }
-
-    setFocus() {
-        let editableArea: any = document.querySelector('.note-editable');
-        editableArea.focus();
     }
 }

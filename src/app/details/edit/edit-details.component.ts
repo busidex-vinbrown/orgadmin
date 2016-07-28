@@ -59,6 +59,7 @@ export class EditDetailsComponent implements OnInit {
         if (orgData) {
             this.organization = JSON.parse(orgData);
             this.emailLink = 'mailto:' + this.organization.Email;
+            this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
         } else {
             this.loading = true;
             this.organizationService.getOrganization(orgId);
@@ -104,6 +105,7 @@ export class EditDetailsComponent implements OnInit {
                     this.organizationService.getOrganization(orgId);
                 } else {
                     this.emailLink = 'mailto:' + this.organization.Email;
+                    this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
                     this.saving = this.loading = false;
                 }
             }
@@ -126,6 +128,7 @@ export class EditDetailsComponent implements OnInit {
 
                 this.emailLink = 'mailto:' + this.organization.Email;
                 this.saving = this.loading = false;
+                
                 this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
             }
         });
