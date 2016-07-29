@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrganizationServiceComponent } from '../../shared/organization.service';
 import { CacheService, CacheKeys } from '../../shared';
 import { User, OrganizationServiceEvents, Organization, Visibility } from '../../shared/models';
-import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup } from '@angular/forms';
+import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
     selector: 'edit-details',
@@ -27,25 +27,29 @@ export class EditDetailsComponent implements OnInit {
         private cacheKeys: CacheKeys,
         private formBuilder: FormBuilder) {
 
-        this.detailsForm = this.formBuilder.group({
-            'name': '',
-            'contacts': '',
-            'email': '',
-            'url': '',
-            'phone1': '',
-            'phone2': '',
-            'twitter': '',
-            'facebook': '',
-            'isPrivate': ''
-        });
+        this.resetForm();
+
     }
 
+    resetForm() {
+        this.detailsForm = this.formBuilder.group({
+            'name': this.organization ? this.organization.Name : '',
+            'contacts': this.organization ? this.organization.Contacts : '',
+            'email': this.organization ? this.organization.Email : '',
+            'url': this.organization ? this.organization.Url : '',
+            'phone1': this.organization ? this.organization.Phone1 : '',
+            'phone2': this.organization ? this.organization.Phone2 : '',
+            'twitter': this.organization ? this.organization.Twitter : '',
+            'facebook': this.organization ? this.organization.Facebook : '',
+            'isPrivate': this.isPrivate
+        });
+    }
     save() {
-
         this.saving = true;
         this.organization.Visibility = this.isPrivate ? Visibility.Private : Visibility.Public;
 
         this.organizationService.updateOrganization(this.organization);
+        this.resetForm();
     }
 
     ngOnInit() {
@@ -59,7 +63,7 @@ export class EditDetailsComponent implements OnInit {
         if (orgData) {
             this.organization = JSON.parse(orgData);
             this.emailLink = 'mailto:' + this.organization.Email;
-            this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
+            this.isPrivate = (this.organization.Visibility === Visibility.Private) ? true : false;
         } else {
             this.loading = true;
             this.organizationService.getOrganization(orgId);
@@ -70,44 +74,7 @@ export class EditDetailsComponent implements OnInit {
             console.log('EditDetails component listening to event: ' + event);
 
             if (event === OrganizationServiceEvents.OrganizationUpdated) {
-                orgData = this.cacheService.get(this.cacheKeys.Organization);
-                this.organization = JSON.parse(orgData);
-                if (this.organization === null) {
-                    this.saving = this.loading = true;
-                    this.organization = {
-                        AdminEmail: '',
-                        Contacts: '',
-                        Created: '',
-                        Deleted: false,
-                        Description: '',
-                        Email: '',
-                        Extension1: '',
-                        Extension2: '',
-                        Facebook: '',
-                        Groups: '',
-                        HomePage: '',
-                        IsMember: false,
-                        Logo: '',
-                        LogoFileName: '',
-                        LogoFilePath: '',
-                        LogoType: '',
-                        Name: '',
-                        OrganizationId: 0,
-                        Phone1: '',
-                        Phone2: '',
-                        ReferralLabel: '',
-                        Twitter: '',
-                        Updated: '',
-                        Url: '',
-                        UserId: 0,
-                        Visibility: 0
-                    };
-                    this.organizationService.getOrganization(orgId);
-                } else {
-                    this.emailLink = 'mailto:' + this.organization.Email;
-                    this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
-                    this.saving = this.loading = false;
-                }
+                this.organizationService.getOrganization(orgId);
             }
 
             if (event === OrganizationServiceEvents.OrganizationReceived) {
@@ -115,21 +82,11 @@ export class EditDetailsComponent implements OnInit {
 
                 this.organization = JSON.parse(orgData);
 
-                this.detailsForm.controls['name'].value = this.organization.Name;
-                this.detailsForm.controls['contacts'].value = this.organization.Contacts;
-                this.detailsForm.controls['email'].value = this.organization.Email;
-                this.detailsForm.controls['url'].value = this.organization.Url;
-                this.detailsForm.controls['phone1'].value = this.organization.Phone1;
-                this.detailsForm.controls['phone2'].value = this.organization.Phone2;
-                this.detailsForm.controls['twitter'].value = this.organization.Twitter;
-                this.detailsForm.controls['facebook'].value = this.organization.Facebook;
-                this.detailsForm.controls['isPrivate'].value = this.isPrivate;
-
+                this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
 
                 this.emailLink = 'mailto:' + this.organization.Email;
                 this.saving = this.loading = false;
-                
-                this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
+                this.resetForm();
             }
         });
     }
