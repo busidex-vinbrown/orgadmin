@@ -13,7 +13,7 @@
                     [src]="card.imgSrc" 
                     [ngClass]="{ 'myCard' : card.IsMyCard, 'clickable': !editMode, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
                     (click)="goToDetails(card.CardId)" />
-                <i *ngIf="editMode" class="fa fa-times-circle icon-remove clickable" (click)="removeReferral(card)"></i>
+                <img *ngIf="editMode" title="remove" class="clickable remove-icon" src="../../img/delete.png" (click)="removeReferral(card)" alt="remove" />
             </div>
             <div class="col-md-4">
                 <label class="card-title">{{card.Name}}</label>
@@ -24,7 +24,8 @@
                 <a [href]="card.Url" target="_blank">{{card.Url}}</a>
             </div>
             <div class="col-md-4">
-                <span>{{card.Notes}}</span>
+                <textarea  *ngIf="editMode" name="notes" id="notes" cols="30" rows="5" [(ngModel)]="card.Notes"></textarea>
+                <span *ngIf="!editMode">{{card.Notes}}</span>
             </div>
             
         </div>

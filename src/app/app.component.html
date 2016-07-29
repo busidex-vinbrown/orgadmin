@@ -4,13 +4,13 @@
       <a href="#"><img src="https://az381524.vo.msecnd.net/images/Busidex_logo_hor.png" /></a>
     </li>
     <li (click)="SetCurrentTab(TabItems.AddMembers)" [ngClass]="{active: Tabs[TabItems.AddMembers]}">
-      <a [routerLink]="['/members/edit']">Add / Edit Members</a>
+      <a [routerLink]="['/members/edit']">Edit Members</a>
     </li>
     <li (click)="SetCurrentTab(TabItems.AddReferrals)" [ngClass]="{active: Tabs[TabItems.AddReferrals]}">
-      <a [routerLink]="['/referrals/edit']">Add / Edit {{ReferralLabel}}</a>
+      <a [routerLink]="['/referrals/edit']">Edit {{ReferralLabel}}</a>
     </li>
     <li *ngIf="false" (click)="SetCurrentTab(TabItems.AddGroup)" [ngClass]="{active: Tabs[TabItems.AddGroup]}">
-      <a>Add / Edit Groups</a>
+      <a>Edit Groups</a>
     </li>
     <li (click)="SetCurrentTab(TabItems.EditDetails)" [ngClass]="{active: Tabs[TabItems.EditDetails]}">
       <a [routerLink]="['/details/edit']">Edit Details</a>

@@ -11,7 +11,7 @@ import { LocalStorage } from 'angular2-local-storage/local_storage';
 import { AppCookieOptions } from './app/shared/app-cookie-options';
 import { CacheService } from './app/shared/cache.service';
 import { CacheKeys } from './app/shared/cache-keys';
-import { provideForms } from '@angular/forms';
+import { provideForms, disableDeprecatedForms } from '@angular/forms';
 
 require('font-awesome-webpack!./font-awesome.config.js');
 // depending on the env mode, enable prod mode or add debugging modules
@@ -23,6 +23,7 @@ if (process.env.ENV === 'build') {
 
 bootstrap(AppComponent, [
   // These are dependencies of our App
+  disableDeprecatedForms(),
   HTTP_PROVIDERS,
   APP_ROUTER_PROVIDERS,
   OrganizationServiceComponent,

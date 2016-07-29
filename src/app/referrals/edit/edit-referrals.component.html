@@ -4,7 +4,7 @@
             <input type="text" class="form-control" placeholder="Search for {{referralLabel}} to add..." (keypress)="handleKeyPress($event)"
                 [(ngModel)]="criteria" />
             <div class="input-group-addon search-button" (click)="doSearch()">
-                <i class="fa fa-search"></i>
+                <img src="../../img/search.png" class="search-icon" title="search" alt="search" />
             </div>
             <div class="input-group-addon clear-search" (click)="clearSearch()">
                 &times;
@@ -19,10 +19,8 @@
                 style="position:relative" />
         </div>
     </div>
-    <img src="../../img/spinner.gif" *ngIf="searching" />
-    
+    <img src="../../img/spinner.gif" *ngIf="searching" />    
 </div>
-<hr/>
 <div class="existing">
     <h2>Current {{referralLabel}}</h2>
     <referrals editMode="true"></referrals>

@@ -9,7 +9,7 @@
                 [src]="card.imgSrc" 
                 [ngClass]="{ 'myCard' : card.IsMyCard, 'clickable': !editMode, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
                 (click)="GoToDetails(card)" />
-            <i *ngIf="editMode" class="fa fa-times-circle icon-remove clickable" (click)="removeMember(card.CardId)"></i>
+            <img *ngIf="editMode" title="remove" class="clickable remove-icon" src="../../img/delete.png" (click)="removeMember(card.CardId)" alt="remove" />
         </div>
     </div>
 </div>
