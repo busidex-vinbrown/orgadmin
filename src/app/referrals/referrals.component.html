@@ -2,10 +2,13 @@
     <div class="loader" *ngIf="loading">
         <img src="img/spinner.gif" />
     </div>
-    <div *ngIf="!loading" class="referral-container card-container">
+    <div *ngIf="!loading" class="card-container">
         <h5 *ngIf="referrals.length == 0">No {{referralLabel}} To Show</h5>
-        
-        <div *ngFor="#card of referrals" class="referral-row">
+        <div class="input-group col-md-8 filter-group">
+            <span class="input-group-addon"><img src="../../img/filter.png" class="search-icon" /></span>
+            <input type="text" class="form-control" placeholder="Filter" [(ngModel)]="filterExpression" />
+        </div>       
+        <div *ngFor="let card of referrals | filter:filterExpression; let idx = index" class="card-row">
             
             <div class="col-md-4">
                 <img 
@@ -24,7 +27,12 @@
                 <a [href]="card.Url" target="_blank">{{card.Url}}</a>
             </div>
             <div class="col-md-4">
-                <textarea  *ngIf="editMode" name="notes" id="notes" cols="30" rows="5" [(ngModel)]="card.Notes"></textarea>
+                <textarea  *ngIf="editMode" name="notes" id="notes" cols="35" rows="5" 
+                    [(ngModel)]="card.Notes"
+                    [disabled]="savingNotes[idx]"
+                    (keyup)="card.dirty = true;"
+                    (blur)="saveNotes(idx, card)"></textarea>
+                <img *ngIf="savingNotes[idx]" class="saving-notes" src="img/spinner.gif" />
                 <span *ngIf="!editMode">{{card.Notes}}</span>
             </div>
             

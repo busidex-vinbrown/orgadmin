@@ -4,12 +4,13 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Response } from '@angular/http';
 import { CacheService, CacheKeys } from '../shared';
 import { User, OrganizationServiceEvents } from '../shared/models';
+import { FilterPipe} from '../shared/filter-pipe';
 
 @Component({
   selector: 'members',
   providers: [],
   directives: [...ROUTER_DIRECTIVES],
-  pipes: [],
+  pipes: [FilterPipe],
   styles: [require('./members.component.scss')],
   templateUrl: './members.component.html'
 })
@@ -21,6 +22,7 @@ export class MembersComponent implements OnInit {
   organization: any;
   loading: boolean;
   organizationId: number;
+  filterExpression: string;
 
   constructor(
     private organizationService: OrganizationServiceComponent,
@@ -70,6 +72,8 @@ export class MembersComponent implements OnInit {
 
   ngOnInit() {
 
+    this.filterExpression = '';
+    
     let userData = this.cacheService.get(this.cacheKeys.User);
     let user: User = JSON.parse(userData);
     this.organizationId = user.Organizations[0].Item2;

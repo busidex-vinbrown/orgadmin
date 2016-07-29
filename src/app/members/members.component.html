@@ -1,15 +1,29 @@
 <div class="loader" *ngIf="loading">
     <img src="img/spinner.gif" />
 </div>
-<div class="well" *ngIf="!loading">
-    <div>
-        <div class="card-container" style="display:inline-block;" *ngFor="#card of organization.Cards">
-            <img 
-                [alt]="card.Name" 
-                [src]="card.imgSrc" 
-                [ngClass]="{ 'myCard' : card.IsMyCard, 'clickable': !editMode, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
-                (click)="GoToDetails(card)" />
-            <img *ngIf="editMode" title="remove" class="clickable remove-icon" src="../../img/delete.png" (click)="removeMember(card.CardId)" alt="remove" />
+
+<div *ngIf="!loading" class="card-container member-container">
+    <h5 *ngIf="organization.Cards.length == 0">No Members To Show</h5>
+    <div class="input-group col-md-8 filter-group">
+        <span class="input-group-addon"><img src="../../img/filter.png" class="search-icon" /></span>
+        <input type="text" class="form-control" placeholder="Filter" [(ngModel)]="filterExpression" />
+    </div>
+    <div *ngFor="let card of organization.Cards | filter:filterExpression" class="card-row">
+
+        <div class="col-md-4">
+            <img [alt]="card.Name" [src]="card.imgSrc" [ngClass]="{ 'myCard' : card.IsMyCard, 'clickable': !editMode, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
+                (click)="goToDetails(card.CardId)" />
+            <img *ngIf="editMode" title="remove" class="clickable remove-icon" src="../../img/delete.png" (click)="removeMember(card)"
+                alt="remove" />
         </div>
+        <div class="col-md-4">
+            <label class="card-title">{{card.Name}}</label>
+            <div *ngFor="#phone of card.PhoneNumbers">
+                <label>{{phone.Number}}</label>
+            </div>
+            <a [href]="card.emailLink" target="_blank">{{card.Email}}</a><br />
+            <a [href]="card.Url" target="_blank">{{card.Url}}</a>
+        </div>
+
     </div>
 </div>

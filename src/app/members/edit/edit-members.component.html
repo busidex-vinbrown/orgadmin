@@ -21,8 +21,9 @@
                 [ngClass]="{ 'myCard' : card.IsMyCard, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
                  style="position:relative" />
         </div>
+        <img src="../../img/spinner.gif" *ngIf="searching" />
     </div>
-    <img src="../../img/spinner.gif" *ngIf="searching" />
+    
     <div class="existing">
         <h2>Current Members</h2>
         <members editMode="true"></members>

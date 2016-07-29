@@ -1,5 +1,8 @@
 @import "node_modules/bootstrap/scss/bootstrap.scss";
 
 :host /deep/ .card-container {
-    opacity: .5;
+    /*opacity: .5;*/
+}
+div.existing{
+    width: 80%;
 }

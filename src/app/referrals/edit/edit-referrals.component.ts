@@ -5,6 +5,7 @@ import { CacheService, CacheKeys, SearchServiceComponent } from '../../shared';
 import { User } from '../../shared/models';
 import { ReferralsComponent } from '../referrals.component';
 
+
 require('bootstrap');
 
 @Component({
