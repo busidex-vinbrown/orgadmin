@@ -13,6 +13,6 @@ import { CacheService } from '../shared/cache.service';
 export class LogoutComponent {
   constructor(private _cacheSerice: CacheService, private router: Router) {
     this._cacheSerice.nuke();
-    this.router.navigate(['/login']);
+    window.location.href = 'https://www.busidex.com/#/logout'
   }
 }

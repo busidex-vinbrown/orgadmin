@@ -28,7 +28,7 @@ export class EditMessageComponent implements OnInit, AfterViewInit {
 
     }
 
-    ngAfterViewInit(){
+    ngAfterViewInit() {
         this.$messageEditor = document.querySelector('.note-editor');
         this.getOrganizationData();
     }
@@ -41,9 +41,8 @@ export class EditMessageComponent implements OnInit, AfterViewInit {
 
     private getOrganizationData() {
         let userData = this.cacheService.get(this.cacheKeys.User);
-        let user: User = JSON.parse(userData);
 
-        let orgId = user.Organizations[0].Item2;
+        let orgId = JSON.parse(this.cacheService.get(this.cacheKeys.CurrentOrganization));
         let orgData = this.cacheService.get(this.cacheKeys.Organization);
         if (orgData) {
             this.organization = JSON.parse(orgData);
@@ -57,8 +56,6 @@ export class EditMessageComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-
-        
 
         this.organizationService.subscribe((event: OrganizationServiceEvents) => {
             console.log('Details component listening to event: ' + event);

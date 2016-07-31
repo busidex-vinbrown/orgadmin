@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
   ReferralLabel: string = 'Referrals';
   visible: boolean = true;
   loggedIn: boolean = false;
+  isAdmin: boolean;
 
   constructor(
     private api: ApiService,
@@ -76,6 +77,7 @@ export class AppComponent implements OnInit {
     let data = this.cacheService.get(this.cacheKeys.User) || null;
     let user: User = JSON.parse(data);
     this.loggedIn = user !== null;
+    let orgId = JSON.parse(this.cacheService.get(this.cacheKeys.CurrentOrganization));
 
     if (this.loggedIn) {
       let orgData = this.cacheService.get(this.cacheKeys.Organization);
@@ -83,11 +85,20 @@ export class AppComponent implements OnInit {
         let organization = JSON.parse(orgData);
         this.ReferralLabel = organization.ReferralLabel;
       } else {
-        this.organizationService.getOrganization(user.Organizations[0].Item2);
+        if (user.StartPage === 'Organization' && orgId === null) {
+          orgId = user.Organizations[0].Item2;
+          this.cacheService.put(this.cacheKeys.CurrentOrganization, orgId);
+        }
+        this.organizationService.getOrganization(orgId);
       }
+
+      this.isAdmin = user.StartPage === 'Organization' && orgId === user.Organizations[0].Item2;
+
     } else {
       this.router.navigate(['/login']);
     }
+
+    
 
     // Subscribe to organization service events
     this.organizationService.subscribe((event: OrganizationServiceEvents) => {
@@ -131,6 +142,7 @@ export class AppComponent implements OnInit {
         this.SetCurrentTab(TabItem.HomePage);
         break;
       default:
+        console.log('Using default route for ', window.location.pathname);
         this.SetCurrentTab(TabItem.Details);
     }
   }

@@ -17,39 +17,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-
-
-  IsOrganizationMember() {
-
-  }
-
-  ShowAddMembers() {
-
-  }
-
-  AddGroup() {
-
-  }
-
-  EditDetails() {
-
-  }
-
-  EditHomePage() {
-
-  }
-
-  GetGroup(id: number) {
-
-  }
-
   ngOnInit() {
 
-  }
-
-  submitState(value) {
-    console.log('submitState', value);
-
-    this.localState.value = '';
   }
 }

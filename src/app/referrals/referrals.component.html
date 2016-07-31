@@ -4,7 +4,7 @@
     </div>
     <div *ngIf="!loading" class="card-container">
         <h5 *ngIf="referrals.length == 0">No {{referralLabel}} To Show</h5>
-        <div class="input-group col-md-8 filter-group">
+        <div *ngIf="referrals.length > 0" class="input-group col-md-8 filter-group">
             <span class="input-group-addon"><img src="../../img/filter.png" class="search-icon" /></span>
             <input type="text" class="form-control" placeholder="Filter" [(ngModel)]="filterExpression" />
         </div>       
@@ -14,8 +14,7 @@
                 <img 
                     [alt]="card.Name" 
                     [src]="card.imgSrc" 
-                    [ngClass]="{ 'myCard' : card.IsMyCard, 'clickable': !editMode, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"
-                    (click)="goToDetails(card.CardId)" />
+                    [ngClass]="{ 'myCard' : card.IsMyCard, 'clickable': !editMode, 'v_preview' : card.FrontOrientation == 'V', 'h_preview' : card.FrontOrientation == 'H', 'imageLink' : true }"/>
                 <img *ngIf="editMode" title="remove" class="clickable remove-icon" src="../../img/delete.png" (click)="removeReferral(card)" alt="remove" />
             </div>
             <div class="col-md-4">

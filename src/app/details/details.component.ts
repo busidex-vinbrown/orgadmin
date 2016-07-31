@@ -29,38 +29,34 @@ export class DetailsComponent implements OnInit {
 
     let userData = this.cacheService.get(this.cacheKeys.User);
     let user: User = JSON.parse(userData);
+    let orgId = JSON.parse(this.cacheService.get(this.cacheKeys.CurrentOrganization));
 
-    if (user.StartPage === 'Organization') {
-      let orgId = user.Organizations[0].Item2;
-      let orgData = this.cacheService.get(this.cacheKeys.Organization);
-      if (orgData) {
+    if (user.StartPage === 'Organization' && orgId === null) {
+      orgId = user.Organizations[0].Item2;
+      this.cacheService.put(this.cacheKeys.CurrentOrganization, orgId);
+    }
+
+    let orgData = this.cacheService.get(this.cacheKeys.Organization);
+    if (orgData) {
+      this.organization = JSON.parse(orgData);
+      this.emailLink = 'mailto:' + this.organization.Email;
+      this._logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
+    } else {
+      this.loading = true;
+      this.organizationService.getOrganization(orgId);
+    }
+
+    // Subscribe to organization service events
+    this.organizationService.subscribe((event: OrganizationServiceEvents) => {
+      console.log('Details component listening to event: ' + event);
+
+      if (event === OrganizationServiceEvents.OrganizationReceived) {
+        orgData = this.cacheService.get(this.cacheKeys.Organization);
         this.organization = JSON.parse(orgData);
         this.emailLink = 'mailto:' + this.organization.Email;
         this._logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
-      } else {
-        this.loading = true;
-        this.organizationService.getOrganization(orgId);
+        this.loading = false;
       }
-
-      // Subscribe to organization service events
-      this.organizationService.subscribe((event: OrganizationServiceEvents) => {
-        console.log('Details component listening to event: ' + event);
-
-        if (event === OrganizationServiceEvents.OrganizationReceived) {
-          orgData = this.cacheService.get(this.cacheKeys.Organization);
-          this.organization = JSON.parse(orgData);
-          this.emailLink = 'mailto:' + this.organization.Email;
-          this._logo = this.organization.LogoFilePath + this.organization.LogoFileName + '.' + this.organization.LogoType;
-          this.loading = false;
-        }
-      });
-
-    } else {
-      if (window.location.href.indexOf('localhost') >= 0) {
-        window.location.href = '/login';
-      } else {
-        window.location.href = 'https://www.busidex.com';
-      }
-    }
+    });
   }
 }

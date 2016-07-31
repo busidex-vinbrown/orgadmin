@@ -7,4 +7,5 @@ export class CacheKeys {
     Organization = 'organization';
     Members = 'members';
     Referrals = 'referrals';
+    CurrentOrganization = 'currentOrganization'
 }

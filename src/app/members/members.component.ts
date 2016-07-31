@@ -47,6 +47,11 @@ export class MembersComponent implements OnInit {
             let card = cards.Model[i];
             let link = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
             card.imgSrc = link;
+            card.Url = card.Url || '';
+            card.Url = card.Url.replace('https://', '').replace('http://', '');
+            if (card.Url.length > 0) {
+              card.Url = 'http://' + card.Url;
+            }
             this.organization.Cards.push(card);
           }
           this.cacheService.put(this.cacheKeys.Members, JSON.stringify(this.organization.Cards));
@@ -55,12 +60,6 @@ export class MembersComponent implements OnInit {
         err => console.error(err),
         () => console.log('done')
         );
-    }
-  }
-
-  goToDetails(card) {
-    if (!this.editMode) {
-
     }
   }
 
@@ -73,17 +72,23 @@ export class MembersComponent implements OnInit {
   ngOnInit() {
 
     this.filterExpression = '';
-    
+
     let userData = this.cacheService.get(this.cacheKeys.User);
     let user: User = JSON.parse(userData);
-    this.organizationId = user.Organizations[0].Item2;
+    let orgId = JSON.parse(this.cacheService.get(this.cacheKeys.CurrentOrganization));
 
-    let orgId = this.organizationId;
+    if (user.StartPage === 'Organization' && orgId === null) {
+      orgId = user.Organizations[0].Item2;
+      this.cacheService.put(this.cacheKeys.CurrentOrganization, orgId);
+    }
+
+    this.organizationId = orgId;
+
     this.loading = true;
     let orgData = this.cacheService.get(this.cacheKeys.Organization);
     if (orgData) {
       this.organization = JSON.parse(orgData);
-      this.getMembers(this.organizationId);
+      this.getMembers(orgId);
     } else {
       this.organizationService.getOrganization(orgId);
     }

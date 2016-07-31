@@ -20,6 +20,7 @@ export class ReferralsComponent implements OnInit {
     loading: boolean;
     referrals: any[];
     referralLabel: string;
+    organization: any;
     savingNotes: boolean[];
     filterExpression: string;
 
@@ -43,68 +44,85 @@ export class ReferralsComponent implements OnInit {
         }
     }
 
-    goToDetails(cardId: number) {
-
-    }
-
     private getReferrals(orgId: number) {
         let organizationData = this.cacheService.get(this.cacheKeys.Organization);
         let organization: Organization = JSON.parse(organizationData);
 
         this.referralLabel = organization.ReferralLabel;
 
-        this.organizationService.getReferrals(orgId)
-            .map((res: Response) => res.json())
-            .subscribe(
-            data2 => {
+        this.referrals = JSON.parse(this.cacheService.get(this.cacheKeys.Referrals));
 
-                this.referrals = [];
+        if (this.referrals === null) {
+            this.organizationService.getReferrals(orgId)
+                .map((res: Response) => res.json())
+                .subscribe(
+                data2 => {
 
-                this.savingNotes = [];
-                for (let i = 0; i < data2.Model.length; i++) {
-                    let card = data2.Model[i].Card;
-                    card.UserCardId = data2.Model[i].UserCardId;
-                    card.imgSrc = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
-                    card.emailLink = 'mailto:' + card.Email;
-                    card.Notes = decodeURIComponent(data2.Model[i].Notes);
-                    if (card.Notes === 'null') {
-                        card.Notes = '';
+                    this.referrals = [];
+
+                    this.savingNotes = [];
+                    for (let i = 0; i < data2.Model.length; i++) {
+                        let card = data2.Model[i].Card;
+                        card.UserCardId = data2.Model[i].UserCardId;
+                        card.imgSrc = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
+                        card.Url = card.Url || '';
+                        card.Url = card.Url.replace('https://', '').replace('http://', '');
+                        if (card.Url.length > 0) {
+                            card.Url = 'http://' + card.Url;
+                        }
+                        card.emailLink = 'mailto:' + card.Email;
+                        card.Notes = decodeURIComponent(data2.Model[i].Notes);
+                        if (card.Notes === 'null') {
+                            card.Notes = '';
+                        }
+                        card.dirty = false;
+                        this.referrals.push(card);
                     }
-                    card.dirty = false;
-                    this.referrals.push(card);
-
-                }
-                this.initControls();
-                this.cacheService.put(this.cacheKeys.Referrals, JSON.stringify(this.referrals));
-                this.loading = false;
-            },
-            err => console.error(err),
-            () => console.log('done')
-            );
+                    this.initControls();
+                    this.cacheService.put(this.cacheKeys.Referrals, JSON.stringify(this.referrals));
+                    this.loading = false;
+                },
+                err => console.error(err),
+                () => console.log('done')
+                );
+        } else {
+            this.loading = false;
+            this.initControls();
+        }
     }
 
     initControls() {
-        this.savingNotes = [];
-        for (let i = 0; i < this.referrals.length; i++) {
-            this.savingNotes.push(false);
+        if (this.editMode) {
+            this.savingNotes = [];
+            for (let i = 0; i < this.referrals.length; i++) {
+                this.savingNotes.push(false);
+            }
         }
     }
 
     ngOnInit() {
 
+        console.log('loading referrals...');
+
+        this.savingNotes = this.referrals = [];
+
         this.filterExpression = '';
-        
+
         let userData = this.cacheService.get(this.cacheKeys.User);
         let user: User = JSON.parse(userData);
-        let orgId = user.Organizations[0].Item2;
+        let orgId = JSON.parse(this.cacheService.get(this.cacheKeys.CurrentOrganization));
+
+        if (user.StartPage === 'Organization' && orgId === null) {
+            orgId = user.Organizations[0].Item2;
+            this.cacheService.put(this.cacheKeys.CurrentOrganization, orgId);
+        }
 
         this.loading = true;
 
-        let referralData = this.cacheService.get(this.cacheKeys.Referrals);
-        if (referralData) {
-            this.referrals = JSON.parse(referralData);
-            this.initControls();
-            this.loading = false;
+        let orgData = this.cacheService.get(this.cacheKeys.Organization);
+        if (orgData) {
+            this.organization = JSON.parse(orgData);
+            this.getReferrals(orgId);
         } else {
             this.organizationService.getOrganization(orgId);
         }

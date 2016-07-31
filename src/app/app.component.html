@@ -1,24 +1,24 @@
 <div class="col-sm-2 col-md-2 sidebar bg-primary" *ngIf="visible">
   <ul class="nav nav-sidebar">
     <li class="navbar-brand">
-      <a href="#"><img src="https://az381524.vo.msecnd.net/images/Busidex_logo_hor.png" /></a>
+      <a href="https://www.busidex.com"><img src="https://az381524.vo.msecnd.net/images/Busidex_logo_hor.png" /></a>
     </li>
-    <li (click)="SetCurrentTab(TabItems.AddMembers)" [ngClass]="{active: Tabs[TabItems.AddMembers]}">
+    <li *ngIf="isAdmin" (click)="SetCurrentTab(TabItems.AddMembers)" [ngClass]="{active: Tabs[TabItems.AddMembers]}">
       <a [routerLink]="['/members/edit']">Edit Members</a>
     </li>
-    <li (click)="SetCurrentTab(TabItems.AddReferrals)" [ngClass]="{active: Tabs[TabItems.AddReferrals]}">
+    <li *ngIf="isAdmin" (click)="SetCurrentTab(TabItems.AddReferrals)" [ngClass]="{active: Tabs[TabItems.AddReferrals]}">
       <a [routerLink]="['/referrals/edit']">Edit {{ReferralLabel}}</a>
     </li>
     <li *ngIf="false" (click)="SetCurrentTab(TabItems.AddGroup)" [ngClass]="{active: Tabs[TabItems.AddGroup]}">
       <a>Edit Groups</a>
     </li>
-    <li (click)="SetCurrentTab(TabItems.EditDetails)" [ngClass]="{active: Tabs[TabItems.EditDetails]}">
+    <li *ngIf="isAdmin" (click)="SetCurrentTab(TabItems.EditDetails)" [ngClass]="{active: Tabs[TabItems.EditDetails]}">
       <a [routerLink]="['/details/edit']">Edit Details</a>
     </li>
-    <li (click)="SetCurrentTab(TabItems.HomePage)" [ngClass]="{active: Tabs[TabItems.HomePage]}">
+    <li *ngIf="isAdmin" (click)="SetCurrentTab(TabItems.HomePage)" [ngClass]="{active: Tabs[TabItems.HomePage]}">
       <a [routerLink]="['/edit-message']">Edit Message</a>
     </li>
-    <li>
+    <li *ngIf="isAdmin" >
       <hr/>
     </li>
     <li (click)="SetCurrentTab(TabItems.Details)" [ngClass]="{active: Tabs[TabItems.Details]}">
@@ -33,9 +33,6 @@
     <li (click)="SetCurrentTab(TabItems.Referrals)" [ngClass]="{active: Tabs[TabItems.Referrals]}">
       <a [routerLink]="['/referrals']">{{ReferralLabel}}</a>
     </li>
-    <!--<li (click)="SetCurrentTab(TabItems.Share)" [ngClass]="{active: Tabs[TabItems.Share]}" ng-show="IsOrganizationMember()">
-      <a>Send Referrals</a>
-    </li>-->
     <li>
       <hr *ngIf="Organization.Groups.length > 0" />
     </li>

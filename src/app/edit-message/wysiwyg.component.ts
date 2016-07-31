@@ -42,7 +42,9 @@ require('summernote/dist/bs4/summernote');
             disableResizeEditor: false,
             disableDragAndDrop: true,
             height: this.editorHeight || 425,
-            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Tahoma', 'Geneva', 'Helvetica', 'Impact','Courier New', 'Monaco', 'Charcoal', 'Lucida Console', 'Lucida Grande', 'Palatino Linotype', 'Book Antiqua', 'Palatino', 'Merriweather', 'Times New Roman', 'Verdana'],
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Tahoma', 'Geneva', 'Helvetica', 
+                        'Impact','Courier New', 'Monaco', 'Charcoal', 'Lucida Console', 'Lucida Grande', 'Palatino Linotype', 
+                        'Book Antiqua', 'Palatino', 'Merriweather', 'Times New Roman', 'Verdana'],
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['font', ['strikethrough', 'superscript', 'subscript']],
