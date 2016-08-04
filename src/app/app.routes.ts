@@ -14,7 +14,7 @@ import { startRoutes } from './start/start.routes';
 
 export const routes: RouterConfig = [
 
-  //{ path: '', redirectTo: '/details', terminal: true },
+  { path: '', redirectTo: '/details', terminal: true },
   ...memberRoutes,
   ...detailRoutes,
   ...guestsRoutes,

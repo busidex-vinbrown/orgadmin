@@ -3,7 +3,7 @@ import { OrganizationServiceComponent } from '../shared/organization.service';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Response } from '@angular/http';
 import { CacheService, CacheKeys } from '../shared';
-import { User, OrganizationServiceEvents } from '../shared/models';
+import { User, ServiceEvents } from '../shared/models';
 import { FilterPipe} from '../shared/filter-pipe';
 
 @Component({
@@ -23,6 +23,7 @@ export class MembersComponent implements OnInit {
   loading: boolean;
   organizationId: number;
   filterExpression: string;
+  hasMembers: boolean;
 
   constructor(
     private organizationService: OrganizationServiceComponent,
@@ -33,33 +34,17 @@ export class MembersComponent implements OnInit {
 
   private getMembers(orgId: number) {
 
+    let orgData = this.cacheService.get(this.cacheKeys.Organization);
+    this.organization = JSON.parse(orgData);
+
     let memberData = this.cacheService.get(this.cacheKeys.Members);
     if (memberData) {
       this.organization.Cards = JSON.parse(memberData);
+      this.hasMembers = this.organization.Cards.length > 0;
       this.loading = false;
     } else {
-      this.organizationService.getMembers(orgId)
-        .map((res: Response) => res.json())
-        .subscribe(
-        cards => {
-          this.organization.Cards = [];
-          for (let i = 0; i < cards.Model.length; i++) {
-            let card = cards.Model[i];
-            let link = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
-            card.imgSrc = link;
-            card.Url = card.Url || '';
-            card.Url = card.Url.replace('https://', '').replace('http://', '');
-            if (card.Url.length > 0) {
-              card.Url = 'http://' + card.Url;
-            }
-            this.organization.Cards.push(card);
-          }
-          this.cacheService.put(this.cacheKeys.Members, JSON.stringify(this.organization.Cards));
-          this.loading = false;
-        },
-        err => console.error(err),
-        () => console.log('done')
-        );
+      this.loading = true;
+      this.organizationService.getMembers(orgId);
     }
   }
 
@@ -94,16 +79,17 @@ export class MembersComponent implements OnInit {
     }
 
     // Subscribe to organization service events
-    this.organizationService.subscribe((event: OrganizationServiceEvents) => {
-      console.log('Members component listening to event: ' + event);
-      if (event === OrganizationServiceEvents.MembersUpdated) {
-        this.organization.Cards = [];
-        this.getMembers(orgId);
-      }
-      if (event === OrganizationServiceEvents.OrganizationReceived) {
-        orgData = this.cacheService.get(this.cacheKeys.Organization);
-        this.organization = JSON.parse(orgData);
-        this.getMembers(orgId);
+    this.organizationService.subscribe((event: ServiceEvents) => {
+
+      switch (event) {
+        case ServiceEvents.MembersUpdated: {
+          this.getMembers(orgId);
+          break;
+        }
+        case ServiceEvents.OrganizationReceived: {
+          this.getMembers(orgId);
+          break;
+        }
       }
     });
   }

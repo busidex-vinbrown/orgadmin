@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { WysiwygComponent } from './wysiwyg.component';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { CacheService, CacheKeys } from '../shared';
-import { User, Organization, OrganizationServiceEvents } from '../shared/models';
+import { User, Organization, ServiceEvents } from '../shared/models';
 
 declare var $: any;
 
@@ -57,14 +57,14 @@ export class EditMessageComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
 
-        this.organizationService.subscribe((event: OrganizationServiceEvents) => {
+        this.organizationService.subscribe((event: ServiceEvents) => {
             console.log('Details component listening to event: ' + event);
 
-            if (event === OrganizationServiceEvents.OrganizationUpdated) {
+            if (event === ServiceEvents.OrganizationUpdated) {
                 this.getOrganizationData();
             }
 
-            if (event === OrganizationServiceEvents.OrganizationReceived) {
+            if (event === ServiceEvents.OrganizationReceived) {
                 this.getOrganizationData();
             }
         });

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CookieService } from 'angular2-cookie/core';
-import { AppCookieOptions } from './app-cookie-options';
+import { CookieService, CookieOptions } from 'angular2-cookie/core';
 import { LocalStorage } from 'angular2-local-storage/local_storage';
 import { CacheKeys } from './cache-keys';
 
@@ -8,12 +7,17 @@ import { CacheKeys } from './cache-keys';
 export class CacheService {
     private cache: any;
 
-    constructor(private _cookieService: CookieService, private _localStorage: LocalStorage, private cacheKeys: CacheKeys) {
+    constructor(
+        private _cookieService: CookieService,
+        private _localStorage: LocalStorage,
+        private cacheKeys: CacheKeys,
+        private cookieOptions: CookieOptions) {
+
         this.cache = {};
     }
 
     get(key) {
-        return this._cookieService.get(key) || this._localStorage[key] || this.cache[key] || null;
+        return this._localStorage[key] || this._cookieService.get(key) || this.cache[key] || null;
     }
 
     put(key, value) {
@@ -39,14 +43,17 @@ export class CacheService {
 
     nuke() {
 
-        let cookies = this._cookieService.getAll();
-
-        for (let cookie in cookies) {
-            if (cookies.hasOwnProperty(cookie)) {
-                this._cookieService.remove(cookie, AppCookieOptions);
-                this._localStorage.remove(cookie);
-            }
+        for (let cookie in this.cacheKeys) {
+            let key = this.camelize(cookie);
+            this._localStorage.remove(key);
         }
+        this._cookieService.removeAll();
         this.cache = {};
+    }
+
+    private camelize(str): string {
+        return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (letter, index) {
+            return index === 0 ? letter.toLowerCase() : letter.toUpperCase();
+        }).replace(/\s+/g, '');
     }
 }

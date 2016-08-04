@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganizationServiceComponent } from '../../shared/organization.service';
 import { CacheService, CacheKeys } from '../../shared';
-import { User, OrganizationServiceEvents, Organization, Visibility } from '../../shared/models';
+import { User, ServiceEvents, Organization, Visibility } from '../../shared/models';
 import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
@@ -32,6 +32,7 @@ export class EditDetailsComponent implements OnInit {
     }
 
     resetForm() {
+
         this.detailsForm = this.formBuilder.group({
             'name': this.organization ? this.organization.Name : '',
             'contacts': this.organization ? this.organization.Contacts : '',
@@ -57,28 +58,54 @@ export class EditDetailsComponent implements OnInit {
         this.saving = false;
         let userData = this.cacheService.get(this.cacheKeys.User);
         let user: User = JSON.parse(userData);
-
+        this.organization = {
+            AdminEmail: '',
+            Contacts: '',
+            Created: '',
+            Deleted: false,
+            Description: '',
+            Email: '',
+            Extension1: '',
+            Extension2: '',
+            Facebook: '',
+            Groups: '', 
+            HomePage: '',
+            IsMember: false,
+            Logo: '',
+            LogoFileName: '',
+            LogoFilePath: '',
+            LogoType: '',
+            Name: '',
+            OrganizationId: 0,
+            Phone1: '',
+            Phone2: '',
+            ReferralLabel: '',
+            Twitter: '',
+            Updated: '',
+            Url: '',
+            UserId: 0,
+            Visibility: 0
+        };
         let orgId = user.Organizations[0].Item2;
-        let orgData = this.cacheService.get(this.cacheKeys.Organization);
-        if (orgData) {
-            this.organization = JSON.parse(orgData);
-            this.emailLink = 'mailto:' + this.organization.Email;
-            this.isPrivate = (this.organization.Visibility === Visibility.Private) ? true : false;
-        } else {
-            this.loading = true;
-            this.organizationService.getOrganization(orgId);
-        }
+        // let orgData = this.cacheService.get(this.cacheKeys.Organization);
+        // if (orgData) {
+        //     this.organization = JSON.parse(orgData);
+        //     this.emailLink = 'mailto:' + this.organization.Email;
+        //     this.isPrivate = (this.organization.Visibility === Visibility.Private) ? true : false;
+        // } else {
+        this.loading = true;
+        this.organizationService.getOrganization(orgId);
+        //}
 
         // Subscribe to organization service events
-        this.organizationService.subscribe((event: OrganizationServiceEvents) => {
-            console.log('EditDetails component listening to event: ' + event);
+        this.organizationService.subscribe((event: ServiceEvents) => {
 
-            if (event === OrganizationServiceEvents.OrganizationUpdated) {
+            if (event === ServiceEvents.OrganizationUpdated) {
                 this.organizationService.getOrganization(orgId);
             }
 
-            if (event === OrganizationServiceEvents.OrganizationReceived) {
-                orgData = this.cacheService.get(this.cacheKeys.Organization);
+            if (event === ServiceEvents.OrganizationReceived) {
+                let orgData = this.cacheService.get(this.cacheKeys.Organization);
 
                 this.organization = JSON.parse(orgData);
 

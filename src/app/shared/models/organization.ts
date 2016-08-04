@@ -10,13 +10,13 @@ export interface Organization {
     Facebook: string;
     Groups: string; 
     HomePage: string;
-    IsMember: boolean
+    IsMember: boolean;
     Logo: string;
     LogoFileName: string;
     LogoFilePath: string;
     LogoType: string;
     Name: string;
-    OrganizationId: number
+    OrganizationId: number;
     Phone1: string;
     Phone2: string;
     ReferralLabel: string;

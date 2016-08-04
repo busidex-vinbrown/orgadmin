@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { CacheService, CacheKeys } from '../shared';
 import { Response } from '@angular/http';
-import { User, Organization, OrganizationServiceEvents } from '../shared/models';
+import { User, Organization, ServiceEvents } from '../shared/models';
 import { FilterPipe} from '../shared/filter-pipe';
 
 @Component({
@@ -47,53 +47,24 @@ export class ReferralsComponent implements OnInit {
     private getReferrals(orgId: number) {
         let organizationData = this.cacheService.get(this.cacheKeys.Organization);
         let organization: Organization = JSON.parse(organizationData);
+        let _referrals = JSON.parse(this.cacheService.get(this.cacheKeys.Referrals));
 
         this.referralLabel = organization.ReferralLabel;
 
-        this.referrals = JSON.parse(this.cacheService.get(this.cacheKeys.Referrals));
-
-        if (this.referrals === null) {
-            this.organizationService.getReferrals(orgId)
-                .map((res: Response) => res.json())
-                .subscribe(
-                data2 => {
-
-                    this.referrals = [];
-
-                    this.savingNotes = [];
-                    for (let i = 0; i < data2.Model.length; i++) {
-                        let card = data2.Model[i].Card;
-                        card.UserCardId = data2.Model[i].UserCardId;
-                        card.imgSrc = 'https://az381524.vo.msecnd.net/cards/' + card.FrontFileId + '.' + card.FrontType;
-                        card.Url = card.Url || '';
-                        card.Url = card.Url.replace('https://', '').replace('http://', '');
-                        if (card.Url.length > 0) {
-                            card.Url = 'http://' + card.Url;
-                        }
-                        card.emailLink = 'mailto:' + card.Email;
-                        card.Notes = decodeURIComponent(data2.Model[i].Notes);
-                        if (card.Notes === 'null') {
-                            card.Notes = '';
-                        }
-                        card.dirty = false;
-                        this.referrals.push(card);
-                    }
-                    this.initControls();
-                    this.cacheService.put(this.cacheKeys.Referrals, JSON.stringify(this.referrals));
-                    this.loading = false;
-                },
-                err => console.error(err),
-                () => console.log('done')
-                );
+        if (_referrals === null) {
+            this.loading = true;
+            this.organizationService.getReferrals(orgId);
         } else {
-            this.loading = false;
+            this.referrals = _referrals;
             this.initControls();
+            this.loading = false;
         }
     }
 
     initControls() {
         if (this.editMode) {
             this.savingNotes = [];
+            this.referrals = this.referrals || [];
             for (let i = 0; i < this.referrals.length; i++) {
                 this.savingNotes.push(false);
             }
@@ -128,16 +99,18 @@ export class ReferralsComponent implements OnInit {
         }
 
         // Subscribe to organization service events
-        this.organizationService.subscribe((event: OrganizationServiceEvents) => {
-            console.log('Referral component listening to event: ' + event);
+        this.organizationService.subscribe((event: ServiceEvents) => {
 
-            if (event === OrganizationServiceEvents.ReferralsUpdated) {
-                this.referrals = [];
-                this.getReferrals(orgId);
-            }
+            switch (event) {
+                case ServiceEvents.ReferralsUpdated: {
+                    this.getReferrals(orgId);
+                    break;
+                }
 
-            if (event === OrganizationServiceEvents.OrganizationReceived) {
-                this.getReferrals(orgId);
+                case ServiceEvents.OrganizationReceived: {
+                    this.getReferrals(orgId);
+                    break;
+                }
             }
         });
     }

@@ -5,6 +5,7 @@ import { CacheService, CacheKeys } from '../shared';
 import { LoginServiceComponent } from './login.service';
 import { LoginParams } from './login-params';
 import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ServiceEvents } from '../shared/models';
 
 @Component({
   selector: 'login',
@@ -53,32 +54,43 @@ export class LoginComponent implements OnInit {
 
     this.waiting = true;
 
-    this.loginService.login(this.loginParams)
-      .subscribe(
-      (user: any) => {
+    this.loginService.login(this.loginParams);
+    // .subscribe(
+    // (user: any) => {
 
-        cache.put(cacheKeys.User, user._body);
-        this.waiting = false;
-        loginErrors = [];
-        router.navigate(['/details']);
-      },
-      (error) => {
-        let errorMessage = '';
-        if (error.status === 404) {
-          errorMessage = 'Invalid username / password combination';
-        } else {
-          errorMessage = 'There was a problem logging in.';
-        }
-        this.waiting = false;
-        this.LoginErrors.push(errorMessage);
-      }
-      );
+    //   cache.put(cacheKeys.User, user._body);
+    //   this.waiting = false;
+    //   loginErrors = [];
+    //   router.navigate(['/details']);
+    // },
+    // (error) => {
+    //   let errorMessage = '';
+    //   if (error.status === 404) {
+    //     errorMessage = 'Invalid username / password combination';
+    //   } else {
+    //     errorMessage = 'There was a problem logging in.';
+    //   }
+    //   this.waiting = false;
+    //   this.LoginErrors.push(errorMessage);
+    // }
+    // );
   }
 
   ngOnInit() {
 
     this.LoginErrors = [];
+    this.loginService.subscribe((event: ServiceEvents) => {
 
+      if (event === ServiceEvents.UserLoggedIn) {
+        this.LoginErrors = [];
+        this.waiting = false;
+        this.router.navigate(['/details']);
+      }
 
+      if (event === ServiceEvents.LoginError) {
+        this.waiting = false;
+        this.LoginErrors.push('Invalid username / password combination');
+      }
+    });
   }
 }

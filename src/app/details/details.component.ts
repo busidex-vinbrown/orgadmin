@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { CacheService, CacheKeys } from '../shared';
-import { User, Organization, OrganizationServiceEvents } from '../shared/models';
+import { User, Organization, ServiceEvents } from '../shared/models';
 
 @Component({
   selector: 'my-details',
@@ -47,10 +47,10 @@ export class DetailsComponent implements OnInit {
     }
 
     // Subscribe to organization service events
-    this.organizationService.subscribe((event: OrganizationServiceEvents) => {
+    this.organizationService.subscribe((event: ServiceEvents) => {
       console.log('Details component listening to event: ' + event);
 
-      if (event === OrganizationServiceEvents.OrganizationReceived) {
+      if (event === ServiceEvents.OrganizationReceived) {
         orgData = this.cacheService.get(this.cacheKeys.Organization);
         this.organization = JSON.parse(orgData);
         this.emailLink = 'mailto:' + this.organization.Email;

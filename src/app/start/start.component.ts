@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { OrganizationServiceEvents } from '../shared/models';
+import { ServiceEvents } from '../shared/models';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { CacheService, CacheKeys } from '../shared';
 
@@ -48,8 +48,8 @@ export class StartComponent implements OnInit {
             this.organizationService.getOrganization(orgId);
         });
 
-        this.organizationService.subscribe((event: OrganizationServiceEvents) => {
-            if (event === OrganizationServiceEvents.OrganizationReceived) {
+        this.organizationService.subscribe((event: ServiceEvents) => {
+            if (event === ServiceEvents.OrganizationReceived) {
                 this.router.navigate(['details']);
             }
         });
