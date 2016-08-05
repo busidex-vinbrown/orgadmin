@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { CacheService, CacheKeys } from '../shared';
 import { User, Organization, ServiceEvents } from '../shared/models';
@@ -11,12 +11,13 @@ import { User, Organization, ServiceEvents } from '../shared/models';
   styles: [require('./details.component.scss')],
   templateUrl: './details.component.html'
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
 
   organization: Organization;
   emailLink: string;
   loading: boolean;
   _logo: string;
+  active: boolean;
 
   constructor(
     private organizationService: OrganizationServiceComponent,
@@ -25,7 +26,17 @@ export class DetailsComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.organizationService = null;
+    this.active = false;
+    console.log('Details component ngOnDestroy');
+  }
+
   ngOnInit() {
+
+    this.active = true;
+
+    console.log('Details component ngOnInit');
 
     let userData = this.cacheService.get(this.cacheKeys.User);
     let user: User = JSON.parse(userData);
@@ -48,9 +59,9 @@ export class DetailsComponent implements OnInit {
 
     // Subscribe to organization service events
     this.organizationService.subscribe((event: ServiceEvents) => {
-      console.log('Details component listening to event: ' + event);
-
-      if (event === ServiceEvents.OrganizationReceived) {
+      
+      if (event === ServiceEvents.OrganizationReceived && this.active) {
+        console.log('Details component listening to event: ' + event);
         orgData = this.cacheService.get(this.cacheKeys.Organization);
         this.organization = JSON.parse(orgData);
         this.emailLink = 'mailto:' + this.organization.Email;

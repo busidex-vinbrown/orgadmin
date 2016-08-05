@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ServiceEvents } from '../shared/models';
 import { OrganizationServiceComponent } from '../shared/organization.service';
@@ -13,8 +13,8 @@ import { CacheService, CacheKeys } from '../shared';
     styles: [],
     template: ` `
 })
-export class StartComponent implements OnInit {
-    
+export class StartComponent implements OnInit, OnDestroy {
+
     constructor(
         private cacheService: CacheService,
         private cacheKeys: CacheKeys,
@@ -25,15 +25,19 @@ export class StartComponent implements OnInit {
 
     }
 
+    ngOnDestroy() {
+        // this.organizationService.unsubscribe();
+    }
+
     ngOnInit() {
-        
+
         this.route.params.subscribe(params => {
 
             let user = this.cacheService.get(this.cacheKeys.User);
-            if(user === null){
+            if (user === null) {
                 window.location.href = 'https://www.busidex.com/#/login';
                 return;
-            }else{
+            } else {
                 this.cacheService.nuke();
                 this.cacheService.put(this.cacheKeys.User, JSON.stringify(user));
             }

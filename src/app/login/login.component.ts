@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { CacheService, CacheKeys } from '../shared';
@@ -15,7 +15,7 @@ import { ServiceEvents } from '../shared/models';
   styles: [require('./login.component.scss')],
   templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   loginParams: LoginParams;
   LoginErrors: any[] = [];
@@ -55,25 +55,10 @@ export class LoginComponent implements OnInit {
     this.waiting = true;
 
     this.loginService.login(this.loginParams);
-    // .subscribe(
-    // (user: any) => {
+  }
 
-    //   cache.put(cacheKeys.User, user._body);
-    //   this.waiting = false;
-    //   loginErrors = [];
-    //   router.navigate(['/details']);
-    // },
-    // (error) => {
-    //   let errorMessage = '';
-    //   if (error.status === 404) {
-    //     errorMessage = 'Invalid username / password combination';
-    //   } else {
-    //     errorMessage = 'There was a problem logging in.';
-    //   }
-    //   this.waiting = false;
-    //   this.LoginErrors.push(errorMessage);
-    // }
-    // );
+  ngOnDestroy() {
+    // this.loginService.unsubscribe();
   }
 
   ngOnInit() {

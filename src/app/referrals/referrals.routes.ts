@@ -4,5 +4,5 @@ import { EditReferralsComponent } from './edit/edit-referrals.component';
 
 export const referralsRoutes: RouterConfig = [
     { path: 'referrals', component: ReferralsComponent },
-    { path: 'referrals/edit', component: EditReferralsComponent }
+    { path: 'edit-referrals', component: EditReferralsComponent }
 ];

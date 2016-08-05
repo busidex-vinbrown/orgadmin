@@ -3,43 +3,43 @@
     <li class="navbar-brand">
       <a href="https://www.busidex.com"><img src="https://az381524.vo.msecnd.net/images/Busidex_logo_hor.png" /></a>
     </li>
-    <li *ngIf="isAdmin" (click)="SetCurrentTab(TabItems.AddMembers)" [ngClass]="{active: Tabs[TabItems.AddMembers]}">
-      <a [routerLink]="['/members/edit']">Edit Members</a>
+    <li *ngIf="isAdmin" [routerLinkActive]="['active']">
+      <a [routerLink]="['/edit-members']">Edit Members</a>
     </li>
-    <li *ngIf="isAdmin" (click)="SetCurrentTab(TabItems.AddReferrals)" [ngClass]="{active: Tabs[TabItems.AddReferrals]}">
-      <a [routerLink]="['/referrals/edit']">Edit {{ReferralLabel}}</a>
+    <li *ngIf="isAdmin" [routerLinkActive]="['active']">
+      <a [routerLink]="['/edit-referrals']">Edit {{ReferralLabel}}</a>
     </li>
-    <li *ngIf="false" (click)="SetCurrentTab(TabItems.AddGroup)" [ngClass]="{active: Tabs[TabItems.AddGroup]}">
+    <li *ngIf="false" [routerLinkActive]="['active']">
       <a>Edit Groups</a>
     </li>
-    <li *ngIf="isAdmin" (click)="SetCurrentTab(TabItems.EditDetails)" [ngClass]="{active: Tabs[TabItems.EditDetails]}">
-      <a [routerLink]="['/details/edit']">Edit Details</a>
+    <li *ngIf="isAdmin" [routerLinkActive]="['active']">
+      <a [routerLink]="['/edit-details']">Edit Details</a>
     </li>
-    <li *ngIf="isAdmin" (click)="SetCurrentTab(TabItems.HomePage)" [ngClass]="{active: Tabs[TabItems.HomePage]}">
+    <li *ngIf="isAdmin" [routerLinkActive]="['active']">
       <a [routerLink]="['/edit-message']">Edit Message</a>
     </li>
     <li *ngIf="isAdmin" >
       <hr/>
     </li>
-    <li (click)="SetCurrentTab(TabItems.Details)" [ngClass]="{active: Tabs[TabItems.Details]}">
+    <li [routerLinkActive]="['active']">
       <a [routerLink]="['/details']">Details</a>
     </li>
-    <li (click)="SetCurrentTab(TabItems.Members)" [ngClass]="{active: Tabs[TabItems.Members]}">
+    <li [routerLinkActive]="['active']">
       <a [routerLink]="['/members']">Members</a>
     </li>
-    <li *ngIf="false" (click)="SetCurrentTab(TabItems.Guests)" [ngClass]="{active: Tabs[TabItems.Guests]}">
+    <li *ngIf="false" [routerLinkActive]="['active']">
       <a [routerLink]="['/guests']">Guests</a>
     </li>
-    <li (click)="SetCurrentTab(TabItems.Referrals)" [ngClass]="{active: Tabs[TabItems.Referrals]}">
+    <li [routerLinkActive]="['active']">
       <a [routerLink]="['/referrals']">{{ReferralLabel}}</a>
     </li>
-    <li>
+    <!--<li>
       <hr *ngIf="Organization.Groups.length > 0" />
     </li>
     <li *ngFor="let group of Organization.Groups">
       <a class="groupLink" (click)="GetGroup(group.GroupId)">{{group.Description}}</a>
-    </li>
-    <li class="footer" (click)="SetCurrentTab(TabItems.Login)" [ngClass]="{active: Tabs[TabItems.Login]}">
+    </li>-->
+    <li class="footer" [routerLinkActive]="['active']">
       <hr/>
       <a *ngIf="!loggedIn" [routerLink]="['/login']">Log In</a>
       <a *ngIf="loggedIn" [routerLink]="['/logout']">Log Out</a>

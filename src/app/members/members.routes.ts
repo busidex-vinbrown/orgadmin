@@ -4,5 +4,5 @@ import { EditMembersComponent } from './edit/edit-members.component';
 
 export const memberRoutes: RouterConfig = [
     { path: 'members', component: MembersComponent },
-    { path: 'members/edit', component: EditMembersComponent }
+    { path: 'edit-members', component: EditMembersComponent }
 ];

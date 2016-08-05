@@ -5,6 +5,7 @@ import { StartComponent } from './start/start.component';
 import { AboutComponent } from './about';
 import { memberRoutes } from './members/members.routes';
 import { detailRoutes } from './details/details.routes';
+import { editDetailRoutes } from './details/edit/edit-details.routes';
 import { guestsRoutes } from './guests/guests.routes';
 import { referralsRoutes } from './referrals/referrals.routes';
 import { loginRoutes } from './login/login.routes';
@@ -17,6 +18,7 @@ export const routes: RouterConfig = [
   { path: '', redirectTo: '/details', terminal: true },
   ...memberRoutes,
   ...detailRoutes,
+  ...editDetailRoutes,
   ...guestsRoutes,
   ...referralsRoutes,
   ...loginRoutes,

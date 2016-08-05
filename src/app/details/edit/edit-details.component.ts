@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrganizationServiceComponent } from '../../shared/organization.service';
 import { CacheService, CacheKeys } from '../../shared';
 import { User, ServiceEvents, Organization, Visibility } from '../../shared/models';
@@ -12,7 +12,7 @@ import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES, FormBuilder, FormGroup, Abst
     styles: [require('./edit-details.component.scss')],
     templateUrl: './edit-details.component.html'
 })
-export class EditDetailsComponent implements OnInit {
+export class EditDetailsComponent implements OnInit, OnDestroy {
 
     organization: Organization;
     emailLink: string;
@@ -20,6 +20,7 @@ export class EditDetailsComponent implements OnInit {
     saving: boolean;
     isPrivate: boolean;
     detailsForm: FormGroup;
+    active: boolean;
 
     constructor(
         private organizationService: OrganizationServiceComponent,
@@ -53,8 +54,13 @@ export class EditDetailsComponent implements OnInit {
         this.resetForm();
     }
 
-    ngOnInit() {
+    ngOnDestroy() {
+        // this.organizationService.unsubscribe();
+        this.active = false;
+    }
 
+    ngOnInit() {
+        this.active = true;
         this.saving = false;
         let userData = this.cacheService.get(this.cacheKeys.User);
         let user: User = JSON.parse(userData);
@@ -68,7 +74,7 @@ export class EditDetailsComponent implements OnInit {
             Extension1: '',
             Extension2: '',
             Facebook: '',
-            Groups: '', 
+            Groups: '',
             HomePage: '',
             IsMember: false,
             Logo: '',
@@ -100,20 +106,22 @@ export class EditDetailsComponent implements OnInit {
         // Subscribe to organization service events
         this.organizationService.subscribe((event: ServiceEvents) => {
 
-            if (event === ServiceEvents.OrganizationUpdated) {
-                this.organizationService.getOrganization(orgId);
-            }
-
-            if (event === ServiceEvents.OrganizationReceived) {
-                let orgData = this.cacheService.get(this.cacheKeys.Organization);
-
-                this.organization = JSON.parse(orgData);
-
-                this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
-
-                this.emailLink = 'mailto:' + this.organization.Email;
-                this.saving = this.loading = false;
-                this.resetForm();
+            if (this.active) {
+                switch (event) {
+                    case ServiceEvents.OrganizationUpdated: {
+                        this.organizationService.getOrganization(orgId);
+                        break;
+                    }
+                    case ServiceEvents.OrganizationReceived: {
+                        let orgData = this.cacheService.get(this.cacheKeys.Organization);
+                        this.organization = JSON.parse(orgData);
+                        this.isPrivate = this.organization.Visibility === Visibility.Private ? true : false;
+                        this.emailLink = 'mailto:' + this.organization.Email;
+                        this.saving = this.loading = false;
+                        this.resetForm();
+                        break;
+                    }
+                }
             }
         });
     }

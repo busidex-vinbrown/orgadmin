@@ -54,9 +54,9 @@ export class OrganizationServiceComponent extends BaseService {
                         card.Url = 'http://' + card.Url;
                     }
                     if (card.email !== null) {
-                        card.emailLink = 'mailto: ' + card.Email;        
+                        card.emailLink = 'mailto: ' + card.Email;
                     }
-                     
+
                     members.push(card);
                 }
                 this.cacheService.put(this.cacheKeys.Members, JSON.stringify(members));

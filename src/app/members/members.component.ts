@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { OrganizationServiceComponent } from '../shared/organization.service';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Response } from '@angular/http';
@@ -14,7 +14,7 @@ import { FilterPipe} from '../shared/filter-pipe';
   styles: [require('./members.component.scss')],
   templateUrl: './members.component.html'
 })
-export class MembersComponent implements OnInit {
+export class MembersComponent implements OnInit, OnDestroy {
   @Input() editMode: boolean;
 
   searchFilter: any;
@@ -24,6 +24,7 @@ export class MembersComponent implements OnInit {
   organizationId: number;
   filterExpression: string;
   hasMembers: boolean;
+  active: boolean;
 
   constructor(
     private organizationService: OrganizationServiceComponent,
@@ -54,8 +55,14 @@ export class MembersComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    // this.organizationService.unsubscribe();
+    this.active = false;
+  }
+
   ngOnInit() {
 
+    this.active = true;
     this.filterExpression = '';
 
     let userData = this.cacheService.get(this.cacheKeys.User);
@@ -81,14 +88,17 @@ export class MembersComponent implements OnInit {
     // Subscribe to organization service events
     this.organizationService.subscribe((event: ServiceEvents) => {
 
-      switch (event) {
-        case ServiceEvents.MembersUpdated: {
-          this.getMembers(orgId);
-          break;
-        }
-        case ServiceEvents.OrganizationReceived: {
-          this.getMembers(orgId);
-          break;
+      if (this.active) {
+        switch (event) {
+          case ServiceEvents.MembersUpdated: {
+            this.getMembers(orgId);
+            break;
+          }
+          case ServiceEvents.OrganizationReceived: {
+            console.log('Members component listening to event: ' + event);
+            this.getMembers(orgId);
+            break;
+          }
         }
       }
     });
