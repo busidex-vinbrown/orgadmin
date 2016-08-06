@@ -50,12 +50,7 @@ export class StartComponent implements OnInit, OnDestroy {
 
             this.cacheService.put(this.cacheKeys.CurrentOrganization, JSON.stringify(orgId));
             this.organizationService.getOrganization(orgId);
-        });
-
-        this.organizationService.subscribe((event: ServiceEvents) => {
-            if (event === ServiceEvents.OrganizationReceived) {
-                this.router.navigate(['details']);
-            }
+            this.router.navigate(['details']);
         });
     }
 }

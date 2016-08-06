@@ -21,7 +21,7 @@
     </div>
     <!--CONTACTS-->
     <div class="form-group row">
-        <label for="contactsInput" class="col-sm-2 form-control-label">Contacts</label><span class="dirty" *ngIf="detailsForm.controls['contacts'].dirty">*</span>
+        <label for="contactsInput" class="col-sm-2 form-control-label">Contact</label><span class="dirty" *ngIf="detailsForm.controls['contacts'].dirty">*</span>
         <div class="col-md-8">
             <input type="text" class="form-control" id="contactsInput" placeholder="Organization Contacts" 
                 [formControl]="detailsForm.find('contacts')"
