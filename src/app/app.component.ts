@@ -18,8 +18,8 @@ import '../styles/app.scss';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  Organization: any;
-  EditingDetails: boolean;
+  Organization: any = {};
+  EditingDetails: boolean = false;
   ReferralLabel: string = 'Referrals';
   visible: boolean = true;
   loggedIn: boolean = false;
@@ -39,10 +39,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  IsOrganizationAdmin() {
-    return true;
-  }
-
   private checkAdmin(orgId: number): boolean {
     return this.user && this.user.StartPage === 'Organization' && orgId === this.user.Organizations[0].Item2;
   }
@@ -54,28 +50,27 @@ export class AppComponent implements OnInit {
     this.loggedIn = this.user !== null;
     let orgId = JSON.parse(this.cacheService.get(this.cacheKeys.CurrentOrganization));
 
-    if (this.loggedIn) {
-      let orgData = this.cacheService.get(this.cacheKeys.Organization);
-      if (orgData) {
-        let organization: Organization = JSON.parse(orgData);
-        this.ReferralLabel = organization.ReferralLabel;
-        orgId = organization.OrganizationId;
-      } else {
-        if (this.user !== null && this.user.StartPage === 'Organization' && orgId === null) {
-          orgId = this.user.Organizations[0].Item2;
-          this.cacheService.put(this.cacheKeys.CurrentOrganization, orgId);
-        }
-        this.organizationService.getOrganization(orgId);
-      }
-
-      this.isAdmin = this.user.StartPage === 'Organization' && orgId === this.user.Organizations[0].Item2;
-      console.log('IsAdmin is ', this.isAdmin);
-      console.log('Current organization is ', orgId);
-
-
-    } else {
+    if (!this.loggedIn) {
       this.router.navigate(['/login']);
+      return;
     }
+
+    let orgData = this.cacheService.get(this.cacheKeys.Organization);
+    if (orgData) {
+      let organization: Organization = JSON.parse(orgData);
+      this.ReferralLabel = organization.ReferralLabel;
+      orgId = organization.OrganizationId;
+    } else {
+      if (this.user.StartPage === 'Organization' && orgId === null) {
+        orgId = this.user.Organizations[0].Item2;
+        this.cacheService.put(this.cacheKeys.CurrentOrganization, orgId);
+      }
+      this.organizationService.getOrganization(orgId);
+    }
+
+    this.isAdmin = this.user.StartPage === 'Organization' && orgId === this.user.Organizations[0].Item2;
+    console.log('IsAdmin is ', this.isAdmin);
+    console.log('Current organization is ', orgId);
 
     // Subscribe to organization service events
     this.organizationService.subscribe((event: ServiceEvents) => {
@@ -93,9 +88,5 @@ export class AppComponent implements OnInit {
         this.isAdmin = this.checkAdmin(orgId);
       }
     });
-
-    this.EditingDetails = false;
-    this.Organization = {};
-    this.Organization.Groups = [];
   }
 }

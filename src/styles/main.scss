@@ -106,6 +106,9 @@ div.search-bar{
     .input-group{
         width: 600px;
     }
+    h2{
+        margin-top:35px;
+    }
 }
  div.input-group-addon.search-button{
     background-color: $brand-primary;
@@ -118,7 +121,7 @@ div.search-bar{
 }
 
 .search-results{
-    margin-top: 140px;
+    margin-top: 250px;
 }
 
 .search-results-container img{

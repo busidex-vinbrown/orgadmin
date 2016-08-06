@@ -33,12 +33,6 @@
     <li [routerLinkActive]="['active']">
       <a [routerLink]="['/referrals']">{{ReferralLabel}}</a>
     </li>
-    <!--<li>
-      <hr *ngIf="Organization.Groups.length > 0" />
-    </li>
-    <li *ngFor="let group of Organization.Groups">
-      <a class="groupLink" (click)="GetGroup(group.GroupId)">{{group.Description}}</a>
-    </li>-->
     <li class="footer" [routerLinkActive]="['active']">
       <hr/>
       <a *ngIf="!loggedIn" [routerLink]="['/login']">Log In</a>

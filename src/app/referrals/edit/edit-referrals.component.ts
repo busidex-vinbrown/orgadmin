@@ -17,7 +17,7 @@ require('bootstrap');
     templateUrl: './edit-referrals.component.html'
 })
 export class EditReferralsComponent implements OnInit {
-    referralLabel: string = 'referrals';
+    referralLabel: string = 'Referrals';
     searching: boolean;
     searchResults: any[];
     user: User;
@@ -144,5 +144,9 @@ export class EditReferralsComponent implements OnInit {
 
         let userData = this.cacheService.get(this.cacheKeys.User);
         this.user = JSON.parse(userData);
+
+        let orgData = this.cacheService.get(this.cacheKeys.Organization);
+        let org = JSON.parse(orgData);
+        this.referralLabel = org.ReferralLabel;
     }
 }
